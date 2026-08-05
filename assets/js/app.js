@@ -17,7 +17,6 @@
     }
     
     // Kalau tidak ada, pakai default dari data.js
-    // Pastikan window.IAQ_CONFIG sudah ada dari data.js
     if (!window.IAQ_CONFIG) {
       console.warn('⚠️ IAQ_CONFIG tidak ditemukan, gunakan fallback');
       window.IAQ_CONFIG = {
@@ -30,12 +29,12 @@
         SEKOLAH_TAGLINE: 'Islam Akhlaq Qur\'an',
         SHEET_ID: '',
         SHEET_TABS: {
-          SISWA: 'Siswa',
-          JADWAL: 'Jadwal',
-          MATERI: 'Materi',
-          NILAI: 'Nilai',
-          ABSENSI: 'Absensi',
-          BOBOT: 'Bobot'
+          SISWA: 'MASTER_SISWA',
+          JADWAL: 'JADWAL',
+          MATERI: 'MATERI_LINK',
+          NILAI: 'NILAI',
+          ABSENSI: 'ABSENSI',
+          BOBOT: 'BOBOT_NILAI'
         },
         PUSTAKA: [],
         KELAS_ONLINE: [],
@@ -140,7 +139,9 @@
     buildFilters();
   }
 
-  // --- BERANDA ---
+  // ============================================================
+  // 1. BERANDA
+  // ============================================================
   function renderBeranda() {
     const now = new Date();
     const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
@@ -181,7 +182,7 @@
       `).join('');
     }
 
-    // Siswa perlu perhatian
+    // Siswa perlu perhatian (nilai di bawah 75)
     const perlu = DATA.nilai.filter(n => {
       const akhir = parseFloat(n.Nilai_Akhir);
       return !isNaN(akhir) && akhir < 75;
@@ -192,7 +193,9 @@
     renderQuickLinks();
   }
 
-  // --- QUICK LINKS ---
+  // ============================================================
+  // 2. QUICK LINKS
+  // ============================================================
   function renderQuickLinks() {
     const grid = $('quickGrid');
     const links = CFG.QUICK_LINKS || [
@@ -210,7 +213,9 @@
     `).join('');
   }
 
-  // --- MATERI ---
+  // ============================================================
+  // 3. MATERI
+  // ============================================================
   function renderMateri(filterKelas) {
     const grid = $('materiGrid');
     let data = DATA.materi;
@@ -249,7 +254,9 @@
     }).join('');
   }
 
-  // --- ABSENSI ---
+  // ============================================================
+  // 4. ABSENSI - DENGAN KODE SISWA
+  // ============================================================
   function renderAbsensi(tanggalStr, filterKelas) {
     const dateLabel = $('absensiDateLabel');
     dateLabel.textContent = tanggalStr ? 'Tanggal: ' + tanggalStr : 'Pilih tanggal';
@@ -257,6 +264,9 @@
     let data = DATA.absensi;
     if (tanggalStr) data = data.filter(a => a.Tanggal === tanggalStr);
     if (filterKelas && filterKelas !== 'all') data = data.filter(a => a.Kelas === filterKelas);
+
+    // Urutkan berdasarkan Kode_Siswa
+    data.sort((a, b) => (a.Kode_Siswa || '').localeCompare(b.Kode_Siswa || ''));
 
     const counts = {Hadir:0,Sakit:0,Izin:0,Alpha:0};
     data.forEach(a => { if (counts[a.Status] !== undefined) counts[a.Status]++; });
@@ -267,42 +277,58 @@
 
     const tb = $('absensiTbody');
     if (!data.length) {
-      tb.innerHTML = `<tr><td colspan="5" class="text-center">Belum ada data absensi${tanggalStr ? ' tanggal ' + tanggalStr : ''}</td></tr>`;
+      tb.innerHTML = `<tr><td colspan="6" class="text-center">Belum ada data absensi${tanggalStr ? ' tanggal ' + tanggalStr : ''}</td></tr>`;
       return;
     }
     tb.innerHTML = data.map((a, i) => `
       <tr>
         <td>${i+1}</td>
-        <td>${a.Nama}</td>
-        <td>${a.Kelas}</td>
-        <td><span class="tag tag-${a.Status.toLowerCase()}">${a.Status}</span></td>
+        <td><strong>${a.Kode_Siswa || '-'}</strong></td>
+        <td>${a.Nama || '-'}</td>
+        <td>${a.Kelas || '-'}</td>
+        <td><span class="tag tag-${(a.Status || '').toLowerCase()}">${a.Status || '-'}</span></td>
         <td>${a.Keterangan || '-'}</td>
       </tr>
     `).join('');
   }
 
-  // --- NILAI SISWA ---
+  // ============================================================
+  // 5. NILAI SISWA - DENGAN KODE SISWA
+  // ============================================================
   function renderNilai(filterKelas) {
     let data = DATA.nilai;
     if (filterKelas && filterKelas !== 'all') data = data.filter(n => n.Kelas === filterKelas);
 
+    // Urutkan berdasarkan Kode_Siswa
+    data.sort((a, b) => (a.Kode_Siswa || '').localeCompare(b.Kode_Siswa || ''));
+
     const tb = $('nilaiTbody');
     if (!data.length) {
-      tb.innerHTML = '<tr><td colspan="12" class="text-center">Belum ada data nilai</td></tr>';
+      tb.innerHTML = '<tr><td colspan="13" class="text-center">Belum ada data nilai</td></tr>';
       return;
     }
     tb.innerHTML = data.map((n, i) => `
       <tr>
-        <td>${i+1}</td><td>${n.Nama || '-'}</td><td>${n.Kelas || '-'}</td>
-        <td>${n.UH || '-'}</td><td>${n.PTS || '-'}</td><td>${n.PAS || '-'}</td>
-        <td>${n.Listening || '-'}</td><td>${n.Speaking || '-'}</td><td>${n.Reading || '-'}</td><td>${n.Writing || '-'}</td>
+        <td>${i+1}</td>
+        <td><strong>${n.Kode_Siswa || '-'}</strong></td>
+        <td>${n.Nama || '-'}</td>
+        <td>${n.Kelas || '-'}</td>
+        <td>${n.UH || '-'}</td>
+        <td>${n.PTS || '-'}</td>
+        <td>${n.PAS || '-'}</td>
+        <td>${n.Listening || '-'}</td>
+        <td>${n.Speaking || '-'}</td>
+        <td>${n.Reading || '-'}</td>
+        <td>${n.Writing || '-'}</td>
         <td><strong>${n.Nilai_Akhir || '-'}</strong></td>
         <td><span class="tag tag-${(n.Predikat || '').toLowerCase()}">${n.Predikat || '-'}</span></td>
       </tr>
     `).join('');
   }
 
-  // --- BOBOT / REKAP KELAS ---
+  // ============================================================
+  // 6. BOBOT / REKAP KELAS
+  // ============================================================
   function renderBobot() {
     const bb = $('bobotTbody');
     if (!DATA.bobot.length) {
@@ -312,14 +338,21 @@
     bb.innerHTML = DATA.bobot.map(b => `
       <tr>
         <td><strong>${b.Kelas || '-'}</strong></td>
-        <td>${b.UH || '-'}</td><td>${b.PTS || '-'}</td><td>${b.PAS || '-'}</td>
-        <td>${b.Listening || '-'}</td><td>${b.Speaking || '-'}</td><td>${b.Reading || '-'}</td><td>${b.Writing || '-'}</td>
+        <td>${b.UH || '-'}</td>
+        <td>${b.PTS || '-'}</td>
+        <td>${b.PAS || '-'}</td>
+        <td>${b.Listening || '-'}</td>
+        <td>${b.Speaking || '-'}</td>
+        <td>${b.Reading || '-'}</td>
+        <td>${b.Writing || '-'}</td>
         <td>${b.Keterangan || '-'}</td>
       </tr>
     `).join('');
   }
 
-  // --- JADWAL ---
+  // ============================================================
+  // 7. JADWAL
+  // ============================================================
   function renderJadwal() {
     const days = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
     const grid = $('jadwalGrid');
@@ -342,7 +375,9 @@
     }).join('');
   }
 
-  // --- KELAS ONLINE ---
+  // ============================================================
+  // 8. KELAS ONLINE
+  // ============================================================
   function renderKelas() {
     const grid = $('classroomGrid');
     const kelasOnline = CFG.KELAS_ONLINE || [];
@@ -380,7 +415,9 @@
     }).join('');
   }
 
-  // --- PUSTAKA ---
+  // ============================================================
+  // 9. PUSTAKA
+  // ============================================================
   function renderPustaka() {
     const grid = $('pustakaGrid');
     const pustaka = CFG.PUSTAKA || [];
@@ -397,7 +434,9 @@
     `).join('');
   }
 
-  // --- TENTANG / PROFIL ---
+  // ============================================================
+  // 10. TENTANG / PROFIL
+  // ============================================================
   function renderTentang() {
     $('aboutSekolah').textContent = CFG.SEKOLAH || 'IAQ Learning';
     $('aboutLevel').textContent = CFG.SEKOLAH_LEVEL || 'SD - SMP';
@@ -409,7 +448,9 @@
     $('aboutVersion').textContent = CFG.VERSI || 'v2.2.0';
   }
 
-  // --- FILTERS ---
+  // ============================================================
+  // 11. FILTERS
+  // ============================================================
   function buildFilters() {
     // Materi filter
     const mf = $('materiFilter');
@@ -458,7 +499,9 @@
     });
   }
 
-  // ===== NAVIGATION =====
+  // ============================================================
+  // 12. NAVIGATION
+  // ============================================================
   function openSidebar() {
     $('sidebar').classList.add('open');
     $('overlay').classList.add('show');
@@ -474,15 +517,16 @@
     $$('.nav-subitem').forEach(item => item.classList.remove('active'));
     $$('.page').forEach(page => page.classList.remove('active'));
 
-    // Activate nav
     const navItem = $(`nav-item-${pageId}`);
     if (navItem) navItem.classList.add('active');
 
-    // Activate page
     const page = $(pageId);
     if (page) page.classList.add('active');
 
-    closeSidebar();
+    // Close sidebar di mobile
+    if (window.innerWidth < 768) {
+      closeSidebar();
+    }
     window.scrollTo({top:0,behavior:'smooth'});
   }
 
@@ -492,7 +536,27 @@
     if (el) el.classList.toggle('open');
   }
 
-  // ===== TOAST =====
+  // ============================================================
+  // 13. BOTTOM NAVIGATION
+  // ============================================================
+  function initBottomNav() {
+    const navItems = document.querySelectorAll('.bottom-nav-item');
+    navItems.forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        const page = this.dataset.page;
+        if (page) {
+          navItems.forEach(n => n.classList.remove('active'));
+          this.classList.add('active');
+          navigateTo(page);
+        }
+      });
+    });
+  }
+
+  // ============================================================
+  // 14. TOAST
+  // ============================================================
   window.showToast = function(msg) {
     const toast = $('toast');
     const toastMsg = $('toastMsg');
@@ -502,12 +566,13 @@
     setTimeout(() => toast.classList.remove('show'), 3000);
   };
 
-  // ===== DATE PICKER =====
+  // ============================================================
+  // 15. DATE PICKER
+  // ============================================================
   function initDatePicker() {
     const dp = $('absensiDate');
     if (!dp) return;
 
-    // Set default to today
     const today = new Date();
     const dd = String(today.getDate()).padStart(2,'0');
     const mm = String(today.getMonth()+1).padStart(2,'0');
@@ -521,7 +586,6 @@
       renderAbsensi(tanggalStr, kelas);
     });
 
-    // Absensi kelas select change
     const as = $('absensiKelasSelect');
     if (as) {
       as.addEventListener('change', function() {
@@ -532,7 +596,6 @@
       });
     }
 
-    // Nilai kelas select change
     const ns = $('nilaiKelasSelect');
     if (ns) {
       ns.addEventListener('change', function() {
@@ -540,13 +603,14 @@
       });
     }
 
-    // Initial render
     const parts = dp.value.split('-');
     const tanggalStr = `${parts[2]}/${parts[1]}/${parts[0]}`;
     renderAbsensi(tanggalStr, 'all');
   }
 
-  // ===== INSTALL PROMPT =====
+  // ============================================================
+  // 16. INSTALL PROMPT
+  // ============================================================
   let deferredPrompt;
   function initInstallPrompt() {
     window.addEventListener('beforeinstallprompt', e => {
@@ -577,30 +641,32 @@
     }
   }
 
-  // ===== SERVICE WORKER =====
+  // ============================================================
+  // 17. SERVICE WORKER
+  // ============================================================
   function initServiceWorker() {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(() => {});
     }
   }
 
-  // ===== DARK MODE =====
+  // ============================================================
+  // 18. DARK MODE
+  // ============================================================
   function initDarkMode() {
     if (localStorage.getItem('darkMode') === 'true') {
       document.documentElement.classList.add('dark');
     }
   }
 
-  // ===== INIT =====
+  // ============================================================
+  // 19. INIT
+  // ============================================================
   function init() {
-    // Dark mode
     initDarkMode();
-
-    // Service Worker
     initServiceWorker();
-
-    // Install prompt
     initInstallPrompt();
+    initBottomNav();
 
     // Splash
     setTimeout(() => {
