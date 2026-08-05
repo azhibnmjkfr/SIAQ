@@ -4,7 +4,6 @@
 
   // ===== LOAD CONFIG =====
   function loadConfig() {
-    // Cek localStorage dulu (untuk halaman config nanti)
     const saved = localStorage.getItem('iaq_config');
     if (saved) {
       try {
@@ -16,7 +15,6 @@
       }
     }
     
-    // Kalau tidak ada, pakai default dari data.js
     if (!window.IAQ_CONFIG) {
       console.warn('⚠️ IAQ_CONFIG tidak ditemukan, gunakan fallback');
       window.IAQ_CONFIG = {
@@ -45,21 +43,17 @@
     console.log('✅ Config loaded from data.js');
   }
 
-  // Panggil load config
   loadConfig();
 
-  // ===== CONFIG =====
   const CFG = window.IAQ_CONFIG;
   const SHEET_ID = CFG.SHEET_ID;
   const TABS = CFG.SHEET_TABS;
   const BASE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=`;
 
-  // Data cache
   const DATA = {
     siswa: [], jadwal: [], materi: [], nilai: [], absensi: [], bobot: [], kelasList: []
   };
 
-  // DOM
   const $ = id => document.getElementById(id);
   const $$ = sel => document.querySelectorAll(sel);
 
@@ -118,7 +112,6 @@
     DATA.absensi = absensi;
     DATA.bobot = bobot;
 
-    // Buat daftar kelas unik dari MASTER_SISWA (pakai Nama_Lengkap sebagai referensi)
     const set = new Set();
     siswa.forEach(s => { 
       if (s.Kelas) set.add(s.Kelas); 
@@ -157,21 +150,22 @@
   // ============================================================
   function renderBeranda() {
     const now = new Date();
-    const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
     const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
     $('currentDate').textContent = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+    
+    // Hanya tampilkan hari untuk keperluan statistik, tidak untuk ucapan
+    const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
     $('currentDay').textContent = days[now.getDay()];
 
-    // Greeting - Tampilkan NAMA LENGKAP
+    // GREETING - Ucapan Statis (tanpa hari)
     const guru = CFG.NAMA_GURU || 'Guru';
     $('welcomeGreeting').textContent = `Assalamu'alaikum, ${guru}!`;
-    $('welcomeSub').textContent = `Selamat ${days[now.getDay()]}, siap mengajar ${CFG.MAPEL}?`;
+    $('welcomeSub').textContent = `Selamat datang di SIAQ Learning!`;
 
-    // Stats - dari MASTER_SISWA
+    // Stats
     $('statSiswa').textContent = DATA.siswa.length;
     $('statMateri').textContent = DATA.materi.length;
 
-    // Jadwal hari ini
     const hariIni = days[now.getDay()];
     const jadwalHariIni = DATA.jadwal
       .filter(j => j.Hari === hariIni)
@@ -195,14 +189,12 @@
       `).join('');
     }
 
-    // Siswa perlu perhatian (nilai di bawah 75)
     const perlu = DATA.nilai.filter(n => {
       const akhir = parseFloat(n.Nilai_Akhir);
       return !isNaN(akhir) && akhir < 75;
     }).length;
     $('statPerlu').textContent = perlu;
 
-    // Quick Links
     renderQuickLinks();
   }
 
@@ -268,7 +260,7 @@
   }
 
   // ============================================================
-  // 4. ABSENSI - PAKAI HEADER SHEET: ID_Siswa, Nama, Kelas, Status, Keterangan
+  // 4. ABSENSI
   // ============================================================
   function renderAbsensi(tanggalStr, filterKelas) {
     const dateLabel = $('absensiDateLabel');
@@ -278,7 +270,6 @@
     if (tanggalStr) data = data.filter(a => a.Tanggal === tanggalStr);
     if (filterKelas && filterKelas !== 'all') data = data.filter(a => a.Kelas === filterKelas);
 
-    // Urutkan berdasarkan ID_Siswa
     data.sort((a, b) => (a.ID_Siswa || '').localeCompare(b.ID_Siswa || ''));
 
     const counts = {Hadir:0,Sakit:0,Izin:0,Alpha:0};
@@ -309,13 +300,12 @@
   }
 
   // ============================================================
-  // 5. NILAI SISWA - PAKAI HEADER SHEET: ID_Siswa, Nama, Kelas, UH, PTS, PAS, Listening, Speaking, Reading, Writing, Nilai_Akhir, Predikat
+  // 5. NILAI SISWA
   // ============================================================
   function renderNilai(filterKelas) {
     let data = DATA.nilai;
     if (filterKelas && filterKelas !== 'all') data = data.filter(n => n.Kelas === filterKelas);
 
-    // Urutkan berdasarkan ID_Siswa
     data.sort((a, b) => (a.ID_Siswa || '').localeCompare(b.ID_Siswa || ''));
 
     const tb = $('nilaiTbody');
@@ -343,7 +333,7 @@
   }
 
   // ============================================================
-  // 6. BOBOT / REKAP KELAS - PAKAI HEADER SHEET: Kelas, UH, PTS, PAS, Listening, Speaking, Reading, Writing, Keterangan
+  // 6. BOBOT / REKAP KELAS
   // ============================================================
   function renderBobot() {
     const bb = $('bobotTbody');
@@ -453,42 +443,32 @@
   // ============================================================
   // 10. TENTANG / PROFIL
   // ============================================================
-  // --- TENTANG / PROFIL ---
-function renderTentang() {
-  console.log('🔄 renderTentang() dipanggil');
-  console.log('CFG:', CFG);
-  
-  try {
-    const sekolah = document.getElementById('aboutSekolah');
-    const level = document.getElementById('aboutLevel');
-    const version = document.getElementById('aboutVersion');
-    const guru = document.getElementById('aboutGuru');
-    const mapel = document.getElementById('aboutMapel');
-    const semester = document.getElementById('aboutSemester');
-    const tahun = document.getElementById('aboutTahun');
+  function renderTentang() {
+    try {
+      const sekolah = document.getElementById('aboutSekolah');
+      const level = document.getElementById('aboutLevel');
+      const version = document.getElementById('aboutVersion');
+      const guru = document.getElementById('aboutGuru');
+      const mapel = document.getElementById('aboutMapel');
+      const semester = document.getElementById('aboutSemester');
+      const tahun = document.getElementById('aboutTahun');
 
-    console.log('Element aboutSekolah:', sekolah);
-    console.log('CFG.SEKOLAH:', CFG.SEKOLAH);
-
-    if (sekolah) sekolah.textContent = CFG.SEKOLAH || 'IAQ Learning';
-    if (level) level.textContent = CFG.SEKOLAH_LEVEL || 'SD - SMP';
-    if (version) version.textContent = CFG.VERSI || 'v2.2.0';
-    if (guru) guru.textContent = CFG.NAMA_GURU || '-';
-    if (mapel) mapel.textContent = CFG.MAPEL || '-';
-    if (semester) semester.textContent = (CFG.SEMESTER || '') + ' ' + (CFG.TAHUN_AJARAN || '') || '-';
-    if (tahun) tahun.textContent = CFG.TAHUN_AJARAN || '-';
-
-    console.log('✅ Tentang selesai diisi');
-  } catch (e) {
-    console.error('❌ Error di renderTentang:', e);
+      if (sekolah) sekolah.textContent = CFG.SEKOLAH || 'IAQ Learning';
+      if (level) level.textContent = CFG.SEKOLAH_LEVEL || 'SD - SMP';
+      if (version) version.textContent = CFG.VERSI || 'v2.2.0';
+      if (guru) guru.textContent = CFG.NAMA_GURU || '-';
+      if (mapel) mapel.textContent = CFG.MAPEL || '-';
+      if (semester) semester.textContent = (CFG.SEMESTER || '') + ' ' + (CFG.TAHUN_AJARAN || '') || '-';
+      if (tahun) tahun.textContent = CFG.TAHUN_AJARAN || '-';
+    } catch (e) {
+      console.error('❌ Error di renderTentang:', e);
+    }
   }
-}
 
   // ============================================================
   // 11. FILTERS
   // ============================================================
   function buildFilters() {
-    // Materi filter
     const mf = $('materiFilter');
     const allBtn = document.createElement('button');
     allBtn.className = 'filter-btn active';
@@ -514,7 +494,6 @@ function renderTentang() {
       mf.appendChild(btn);
     });
 
-    // Absensi kelas select
     const as = $('absensiKelasSelect');
     as.innerHTML = '<option value="all">Semua Kelas</option>';
     DATA.kelasList.forEach(k => {
@@ -524,7 +503,6 @@ function renderTentang() {
       as.appendChild(opt);
     });
 
-    // Nilai kelas select
     const ns = $('nilaiKelasSelect');
     ns.innerHTML = '<option value="all">Semua Kelas</option>';
     DATA.kelasList.forEach(k => {
@@ -536,19 +514,33 @@ function renderTentang() {
   }
 
   // ============================================================
-  // 12. NAVIGATION
+  // 12. NAVIGATION - DENGAN SINKRONISASI BOTTOM NAV
   // ============================================================
   function openSidebar() {
     $('sidebar').classList.add('open');
     $('overlay').classList.add('show');
     document.body.style.overflow = 'hidden';
   }
+  
   function closeSidebar() {
     $('sidebar').classList.remove('open');
     $('overlay').classList.remove('show');
     document.body.style.overflow = '';
   }
+
+  // Fungsi untuk update bottom nav active state
+  function updateBottomNav(pageId) {
+    const navItems = document.querySelectorAll('.bottom-nav-item');
+    navItems.forEach(item => {
+      item.classList.remove('active');
+      if (item.dataset.page === pageId) {
+        item.classList.add('active');
+      }
+    });
+  }
+
   function navigateTo(pageId) {
+    // Update sidebar
     $$('.nav-item').forEach(item => item.classList.remove('active'));
     $$('.nav-subitem').forEach(item => item.classList.remove('active'));
     $$('.page').forEach(page => page.classList.remove('active'));
@@ -559,14 +551,16 @@ function renderTentang() {
     const page = $(pageId);
     if (page) page.classList.add('active');
 
+    // UPDATE BOTTOM NAV - SINKRON!
+    updateBottomNav(pageId);
+
     // Close sidebar di mobile
     if (window.innerWidth < 768) {
       closeSidebar();
     }
-    window.scrollTo({top:0,behavior:'smooth'});
+    window.scrollTo({top: 0, behavior: 'smooth'});
   }
 
-  // Submenu toggle
   function toggleSubmenu(id) {
     const el = $(id);
     if (el) el.classList.toggle('open');
@@ -582,8 +576,10 @@ function renderTentang() {
         e.preventDefault();
         const page = this.dataset.page;
         if (page) {
+          // Update bottom nav
           navItems.forEach(n => n.classList.remove('active'));
           this.classList.add('active');
+          // Navigate
           navigateTo(page);
         }
       });
@@ -704,7 +700,6 @@ function renderTentang() {
     initInstallPrompt();
     initBottomNav();
 
-    // Splash
     setTimeout(() => {
       const splash = $('splash');
       const app = $('app');
@@ -712,22 +707,31 @@ function renderTentang() {
       if (app) app.classList.remove('hidden');
     }, 2000);
 
-    // Header brand click → beranda
     const headerBrand = $('headerBrand');
     if (headerBrand) headerBrand.addEventListener('click', () => navigateTo('beranda'));
 
-    // Profile click → tentang
+    // PROFILE BUTTON → TENTANG + BOTTOM NAV SINKRON
     const profileBtn = $('profileBtn');
-    if (profileBtn) profileBtn.addEventListener('click', () => navigateTo('tentang'));
+    if (profileBtn) {
+      profileBtn.addEventListener('click', function() {
+        // Update bottom nav ke profil
+        const navItems = document.querySelectorAll('.bottom-nav-item');
+        navItems.forEach(item => {
+          item.classList.remove('active');
+          if (item.dataset.page === 'tentang') {
+            item.classList.add('active');
+          }
+        });
+        navigateTo('tentang');
+      });
+    }
 
-    // Menu
     const menuBtn = $('menuBtn');
     if (menuBtn) menuBtn.addEventListener('click', openSidebar);
     
     const overlay = $('overlay');
     if (overlay) overlay.addEventListener('click', closeSidebar);
 
-    // Nav items
     $$('.nav-item').forEach(item => {
       item.addEventListener('click', () => {
         const page = item.dataset.page;
@@ -741,16 +745,13 @@ function renderTentang() {
       });
     });
 
-    // Load data
     loadAll().then(() => {
       initDatePicker();
     });
   }
 
-  // Export untuk submenu toggle
   window.toggleSubmenu = toggleSubmenu;
 
-  // Run
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
