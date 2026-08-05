@@ -454,15 +454,14 @@
   // 10. TENTANG / PROFIL
   // ============================================================
   function renderTentang() {
-    $('aboutSekolah').textContent = CFG.SEKOLAH || 'IAQ Learning';
-    $('aboutLevel').textContent = CFG.SEKOLAH_LEVEL || 'SD - SMP';
-    $('aboutTagline').textContent = CFG.SEKOLAH_TAGLINE || 'Islam Akhlaq Qur\'an';
-    $('aboutGuru').textContent = CFG.NAMA_GURU || '-';
-    $('aboutMapel').textContent = CFG.MAPEL || '-';
-    $('aboutSemester').textContent = CFG.SEMESTER + ' ' + CFG.TAHUN_AJARAN || '-';
-    $('aboutTahun').textContent = CFG.TAHUN_AJARAN || '-';
-    $('aboutVersion').textContent = CFG.VERSI || 'v2.2.0';
-  }
+  $('aboutSekolah').textContent = CFG.SEKOLAH || 'IAQ Learning';
+  $('aboutLevel').textContent = CFG.SEKOLAH_LEVEL || 'SD - SMP';
+  $('aboutGuru').textContent = CFG.NAMA_GURU || '-';
+  $('aboutMapel').textContent = CFG.MAPEL || '-';
+  $('aboutSemester').textContent = CFG.SEMESTER + ' ' + CFG.TAHUN_AJARAN || '-';
+  $('aboutTahun').textContent = CFG.TAHUN_AJARAN || '-';
+  $('aboutVersion').textContent = CFG.VERSI || 'v2.2.0';
+}
 
   // ============================================================
   // 11. FILTERS
