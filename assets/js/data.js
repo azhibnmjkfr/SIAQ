@@ -19,14 +19,11 @@ window.IAQ_CONFIG = {
   // ==========================================
   // [EDIT AREA] Google Sheet ID
   // ==========================================
-  // Cara dapatkan: buka Spreadsheet → lihat URL → ambil ID di antara /d/ dan /edit
-  // Contoh: https://docs.google.com/spreadsheets/d/ABC123/edit → ID = ABC123
   SHEET_ID: "1-OiqWBQIxJ37A4e2ceFvxR28xfOMbMr6s8lKvLJXZ24",
 
   // ==========================================
   // [EDIT AREA] Nama Tab di Google Sheet
   // ==========================================
-  // Pastikan nama tab di Google Sheet SAMA PERSIS dengan di bawah ini
   SHEET_TABS: {
     SISWA: "MASTER_SISWA",
     JADWAL: "JADWAL",
@@ -39,7 +36,6 @@ window.IAQ_CONFIG = {
   // ==========================================
   // [EDIT AREA] Pustaka Digital
   // ==========================================
-  // Tambah/ubah sesuai kebutuhan
   PUSTAKA: [
     { nama: "Buku Pelajaran", icon: "fa-book", url: "coming-soon.html" },
     { nama: "Silabus & RPP", icon: "fa-file-alt", url: "coming-soon.html" },
@@ -52,35 +48,33 @@ window.IAQ_CONFIG = {
   // ==========================================
   // [EDIT AREA] Link Kelas Online
   // ==========================================
-  // Format: { kelas: "5", url: "https://classroom.google.com/c/...", meet: "https://meet.google.com/..." }
   KELAS_ONLINE: [
-    KELAS_ONLINE: [
-  { 
-    kelas: "4", 
-    url: "https://classroom.google.com/c/ODcxMzc1ODE0NzY3?cjc=6wpayed7", 
-    meet: "coming-soon.html" 
-  },
-  { 
-    kelas: "5", 
-    url: "https://classroom.google.com/c/ODcwODcwMTg1NDcx?cjc=uv2d6nn4", 
-    meet: "coming-soon.html" 
-  },
-  { 
-    kelas: "6", 
-    url: "https://classroom.google.com/c/ODcwODY5MzcyMTU4?cjc=ptxln3x6", 
-    meet: "coming-soon.html" 
-  },
-  { 
-    kelas: "7", 
-    url: "https://classroom.google.com/c/ODcwODY5MDcwMTU0?cjc=2skohewr", 
-    meet: "coming-soon.html" 
-  },
-  { 
-    kelas: "8", 
-    url: "https://classroom.google.com/c/ODU1NTk5NDcyODA3?cjc=bg6n5gkn", 
-    meet: "coming-soon.html" 
-  }
-],
+    { 
+      kelas: "4", 
+      url: "https://classroom.google.com/c/ODcxMzc1ODE0NzY3?cjc=6wpayed7", 
+      meet: "coming-soon.html" 
+    },
+    { 
+      kelas: "5", 
+      url: "https://classroom.google.com/c/ODcwODcwMTg1NDcx?cjc=uv2d6nn4", 
+      meet: "coming-soon.html" 
+    },
+    { 
+      kelas: "6", 
+      url: "https://classroom.google.com/c/ODcwODY5MzcyMTU4?cjc=ptxln3x6", 
+      meet: "coming-soon.html" 
+    },
+    { 
+      kelas: "7", 
+      url: "https://classroom.google.com/c/ODcwODY5MDcwMTU0?cjc=2skohewr", 
+      meet: "coming-soon.html" 
+    },
+    { 
+      kelas: "8", 
+      url: "https://classroom.google.com/c/ODU1NTk5NDcyODA3?cjc=bg6n5gkn", 
+      meet: "coming-soon.html" 
+    }
+  ],
 
   // ==========================================
   // [EDIT AREA] Akses Cepat (Quick Links di Beranda)
@@ -101,7 +95,6 @@ window.IAQ_CONFIG = {
 // ============================================
 // JANGAN UBAH DI BAWAH INI!
 // ============================================
-// Untuk kompatibilitas dengan app.js
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = window.IAQ_CONFIG;
 }
