@@ -229,26 +229,26 @@
     </section>
 
     <!-- TENTANG / PROFIL -->
-<section class="page" id="tentang">
-  <div class="page-header">
-    <h2><i class="fas fa-info-circle"></i> Tentang Aplikasi</h2>
-    <p>Informasi sistem pembelajaran</p>
-  </div>
-  <div class="card">
-    <div class="about-box">
-      <img src="assets/icons/icon-192x192.png" alt="IAQ" class="about-logo">
-      <h3 id="aboutSekolah">-</h3>
-      <p id="aboutLevel">-</p>
-      <p class="version" id="aboutVersion">-</p>
-      <div class="about-info">
-        <div class="info-row"><span>Guru</span><strong id="aboutGuru">-</strong></div>
-        <div class="info-row"><span>Mapel</span><strong id="aboutMapel">-</strong></div>
-        <div class="info-row"><span>Semester</span><strong id="aboutSemester">-</strong></div>
-        <div class="info-row"><span>Tahun Ajaran</span><strong id="aboutTahun">-</strong></div>
+    <section class="page" id="tentang">
+      <div class="page-header">
+        <h2><i class="fas fa-info-circle"></i> Tentang Aplikasi</h2>
+        <p>Informasi sistem pembelajaran</p>
       </div>
-    </div>
-  </div>
-</section>
+      <div class="card">
+        <div class="about-box">
+          <img src="assets/icons/icon-192x192.png" alt="IAQ" class="about-logo">
+          <h3 id="aboutSekolah">-</h3>
+          <p id="aboutLevel">-</p>
+          <p class="version" id="aboutVersion">-</p>
+          <div class="about-info">
+            <div class="info-row"><span>Guru</span><strong id="aboutGuru">-</strong></div>
+            <div class="info-row"><span>Mapel</span><strong id="aboutMapel">-</strong></div>
+            <div class="info-row"><span>Semester</span><strong id="aboutSemester">-</strong></div>
+            <div class="info-row"><span>Tahun Ajaran</span><strong id="aboutTahun">-</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
 
   </main>
 </div>
@@ -266,6 +266,30 @@
   <button id="installBtn">Install</button>
   <button class="close-prompt" id="closePrompt"><i class="fas fa-times"></i></button>
 </div>
+
+<!-- ===== BOTTOM NAVIGATION (MOBILE) ===== -->
+<nav class="bottom-nav" id="bottomNav">
+  <button class="bottom-nav-item active" data-page="beranda">
+    <i class="fas fa-home"></i>
+    <span>Beranda</span>
+  </button>
+  <button class="bottom-nav-item" data-page="materi">
+    <i class="fas fa-book-open"></i>
+    <span>Materi</span>
+  </button>
+  <button class="bottom-nav-item" data-page="absensi">
+    <i class="fas fa-user-check"></i>
+    <span>Absensi</span>
+  </button>
+  <button class="bottom-nav-item" data-page="nilai">
+    <i class="fas fa-chart-line"></i>
+    <span>Nilai</span>
+  </button>
+  <button class="bottom-nav-item" data-page="tentang">
+    <i class="fas fa-user"></i>
+    <span>Profil</span>
+  </button>
+</nav>
 
 <script src="assets/js/data.js"></script>
 <script src="assets/js/app.js"></script>
