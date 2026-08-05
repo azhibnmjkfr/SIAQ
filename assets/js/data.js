@@ -8,7 +8,7 @@ window.IAQ_CONFIG = {
   // ==========================================
   // [EDIT AREA] Identitas Sekolah & Guru
   // ==========================================
-  NAMA_GURU: "Mr. Ahmad ZH",
+  NAMA_GURU: "Mr. Ahmad Zaman Huri",
   MAPEL: "Bahasa Inggris",
   SEMESTER: "Ganjil",
   TAHUN_AJARAN: "2026/2027",
