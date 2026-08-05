@@ -453,14 +453,35 @@
   // ============================================================
   // 10. TENTANG / PROFIL
   // ============================================================
-  function renderTentang() {
-  $('aboutSekolah').textContent = CFG.SEKOLAH || 'IAQ Learning';
-  $('aboutLevel').textContent = CFG.SEKOLAH_LEVEL || 'SD - SMP';
-  $('aboutGuru').textContent = CFG.NAMA_GURU || '-';
-  $('aboutMapel').textContent = CFG.MAPEL || '-';
-  $('aboutSemester').textContent = CFG.SEMESTER + ' ' + CFG.TAHUN_AJARAN || '-';
-  $('aboutTahun').textContent = CFG.TAHUN_AJARAN || '-';
-  $('aboutVersion').textContent = CFG.VERSI || 'v2.2.0';
+  // --- TENTANG / PROFIL ---
+function renderTentang() {
+  console.log('🔄 renderTentang() dipanggil');
+  console.log('CFG:', CFG);
+  
+  try {
+    const sekolah = document.getElementById('aboutSekolah');
+    const level = document.getElementById('aboutLevel');
+    const version = document.getElementById('aboutVersion');
+    const guru = document.getElementById('aboutGuru');
+    const mapel = document.getElementById('aboutMapel');
+    const semester = document.getElementById('aboutSemester');
+    const tahun = document.getElementById('aboutTahun');
+
+    console.log('Element aboutSekolah:', sekolah);
+    console.log('CFG.SEKOLAH:', CFG.SEKOLAH);
+
+    if (sekolah) sekolah.textContent = CFG.SEKOLAH || 'IAQ Learning';
+    if (level) level.textContent = CFG.SEKOLAH_LEVEL || 'SD - SMP';
+    if (version) version.textContent = CFG.VERSI || 'v2.2.0';
+    if (guru) guru.textContent = CFG.NAMA_GURU || '-';
+    if (mapel) mapel.textContent = CFG.MAPEL || '-';
+    if (semester) semester.textContent = (CFG.SEMESTER || '') + ' ' + (CFG.TAHUN_AJARAN || '') || '-';
+    if (tahun) tahun.textContent = CFG.TAHUN_AJARAN || '-';
+
+    console.log('✅ Tentang selesai diisi');
+  } catch (e) {
+    console.error('❌ Error di renderTentang:', e);
+  }
 }
 
   // ============================================================
