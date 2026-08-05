@@ -12,8 +12,8 @@ window.IAQ_CONFIG = {
   MAPEL: "Bahasa Inggris",
   SEMESTER: "Ganjil",
   TAHUN_AJARAN: "2026/2027",
-  SEKOLAH: "IAQ SD-SMP",
-  SEKOLAH_LEVEL: "SD - SMP",
+  SEKOLAH: "SD-SMP IAQ",
+  SEKOLAH_LEVEL: "Islam Akhlaq Qur'an",
   SEKOLAH_TAGLINE: "Islam Akhlaq Qur'an",
 
   // ==========================================
