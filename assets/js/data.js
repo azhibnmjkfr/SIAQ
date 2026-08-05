@@ -41,12 +41,12 @@ window.IAQ_CONFIG = {
   // ==========================================
   // Tambah/ubah sesuai kebutuhan
   PUSTAKA: [
-    { nama: "Buku Pelajaran", icon: "fa-book", url: "https://drive.google.com/drive/folders/PLACEHOLDER_BUKU" },
-    { nama: "Silabus & RPP", icon: "fa-file-alt", url: "https://drive.google.com/drive/folders/PLACEHOLDER_SILABUS" },
-    { nama: "Video Pembelajaran", icon: "fa-video", url: "https://drive.google.com/drive/folders/PLACEHOLDER_VIDEO" },
-    { nama: "Lagu & Audio", icon: "fa-music", url: "https://drive.google.com/drive/folders/PLACEHOLDER_AUDIO" },
-    { nama: "Soal & Kisi-kisi", icon: "fa-clipboard-check", url: "https://drive.google.com/drive/folders/PLACEHOLDER_SOAL" },
-    { nama: "Media Pembelajaran", icon: "fa-image", url: "https://drive.google.com/drive/folders/PLACEHOLDER_MEDIA" }
+    { nama: "Buku Pelajaran", icon: "fa-book", url: "coming-soon.html" },
+    { nama: "Silabus & RPP", icon: "fa-file-alt", url: "coming-soon.html" },
+    { nama: "Video Pembelajaran", icon: "fa-video", url: "coming-soon.html" },
+    { nama: "Lagu & Audio", icon: "fa-music", url: "coming-soon.html" },
+    { nama: "Soal & Kisi-kisi", icon: "fa-clipboard-check", url: "coming-soon.html" },
+    { nama: "Media Pembelajaran", icon: "fa-image", url: "coming-soon.html" }
   ],
 
   // ==========================================
@@ -54,13 +54,33 @@ window.IAQ_CONFIG = {
   // ==========================================
   // Format: { kelas: "5", url: "https://classroom.google.com/c/...", meet: "https://meet.google.com/..." }
   KELAS_ONLINE: [
-    { kelas: "1B", url: "https://classroom.google.com/c/PLACEHOLDER_1B", meet: "https://meet.google.com/PLACEHOLDER_MEET_1B" },
-    { kelas: "4", url: "https://classroom.google.com/c/PLACEHOLDER_4", meet: "https://meet.google.com/PLACEHOLDER_MEET_4" },
-    { kelas: "5", url: "https://classroom.google.com/c/PLACEHOLDER_5", meet: "https://meet.google.com/PLACEHOLDER_MEET_5" },
-    { kelas: "6", url: "https://classroom.google.com/c/PLACEHOLDER_6", meet: "https://meet.google.com/PLACEHOLDER_MEET_6" },
-    { kelas: "7", url: "https://classroom.google.com/c/PLACEHOLDER_7", meet: "https://meet.google.com/PLACEHOLDER_MEET_7" },
-    { kelas: "8", url: "https://classroom.google.com/c/PLACEHOLDER_8", meet: "https://meet.google.com/PLACEHOLDER_MEET_8" }
-  ],
+    KELAS_ONLINE: [
+  { 
+    kelas: "4", 
+    url: "https://classroom.google.com/c/ODcxMzc1ODE0NzY3?cjc=6wpayed7", 
+    meet: "coming-soon.html" 
+  },
+  { 
+    kelas: "5", 
+    url: "https://classroom.google.com/c/ODcwODcwMTg1NDcx?cjc=uv2d6nn4", 
+    meet: "coming-soon.html" 
+  },
+  { 
+    kelas: "6", 
+    url: "https://classroom.google.com/c/ODcwODY5MzcyMTU4?cjc=ptxln3x6", 
+    meet: "coming-soon.html" 
+  },
+  { 
+    kelas: "7", 
+    url: "https://classroom.google.com/c/ODcwODY5MDcwMTU0?cjc=2skohewr", 
+    meet: "coming-soon.html" 
+  },
+  { 
+    kelas: "8", 
+    url: "https://classroom.google.com/c/ODU1NTk5NDcyODA3?cjc=bg6n5gkn", 
+    meet: "coming-soon.html" 
+  }
+],
 
   // ==========================================
   // [EDIT AREA] Akses Cepat (Quick Links di Beranda)
