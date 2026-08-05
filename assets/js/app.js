@@ -425,20 +425,20 @@
   // 9. PUSTAKA
   // ============================================================
   function renderPustaka() {
-    const grid = $('pustakaGrid');
-    const pustaka = CFG.PUSTAKA || [];
-    if (!pustaka.length) {
-      grid.innerHTML = '<p class="empty-state">Belum ada pustaka</p>';
-      return;
-    }
-    grid.innerHTML = pustaka.map(p => `
-      <a href="${p.url}" target="_blank" class="pustaka-card">
-        <div class="pustaka-icon"><i class="fas ${p.icon}"></i></div>
-        <h4>${p.nama}</h4>
-        <p>Klik untuk membuka</p>
-      </a>
-    `).join('');
+  const grid = $('pustakaGrid');
+  const pustaka = CFG.PUSTAKA || [];
+  if (!pustaka.length) {
+    grid.innerHTML = '<p class="empty-state">Belum ada pustaka</p>';
+    return;
   }
+  grid.innerHTML = pustaka.map(p => `
+    <a href="${p.url}" class="pustaka-card">
+      <div class="pustaka-icon"><i class="fas ${p.icon}"></i></div>
+      <h4>${p.nama}</h4>
+      <p>Klik untuk membuka</p>
+    </a>
+  `).join('');
+}
 
   // ============================================================
   // 10. TENTANG / PROFIL
