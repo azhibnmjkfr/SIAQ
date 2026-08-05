@@ -118,9 +118,22 @@
     DATA.absensi = absensi;
     DATA.bobot = bobot;
 
+    // Buat daftar kelas unik dari MASTER_SISWA (pakai Nama_Lengkap sebagai referensi)
     const set = new Set();
-    siswa.forEach(s => { if (s.Kelas) set.add(s.Kelas); });
+    siswa.forEach(s => { 
+      if (s.Kelas) set.add(s.Kelas); 
+    });
     DATA.kelasList = Array.from(set).sort((a,b) => String(a).localeCompare(String(b), undefined, {numeric:true}));
+
+    console.log('📊 Data loaded:', {
+      siswa: DATA.siswa.length,
+      jadwal: DATA.jadwal.length,
+      materi: DATA.materi.length,
+      nilai: DATA.nilai.length,
+      absensi: DATA.absensi.length,
+      bobot: DATA.bobot.length,
+      kelas: DATA.kelasList
+    });
 
     renderAll();
   }
@@ -154,7 +167,7 @@
     $('welcomeGreeting').textContent = `Assalamu'alaikum, ${guru}!`;
     $('welcomeSub').textContent = `Selamat ${days[now.getDay()]}, siap mengajar ${CFG.MAPEL}?`;
 
-    // Stats
+    // Stats - dari MASTER_SISWA
     $('statSiswa').textContent = DATA.siswa.length;
     $('statMateri').textContent = DATA.materi.length;
 
@@ -255,7 +268,7 @@
   }
 
   // ============================================================
-  // 4. ABSENSI - DENGAN KODE SISWA
+  // 4. ABSENSI - PAKAI HEADER SHEET: ID_Siswa, Nama, Kelas, Status, Keterangan
   // ============================================================
   function renderAbsensi(tanggalStr, filterKelas) {
     const dateLabel = $('absensiDateLabel');
@@ -265,11 +278,14 @@
     if (tanggalStr) data = data.filter(a => a.Tanggal === tanggalStr);
     if (filterKelas && filterKelas !== 'all') data = data.filter(a => a.Kelas === filterKelas);
 
-    // Urutkan berdasarkan Kode_Siswa
-    data.sort((a, b) => (a.Kode_Siswa || '').localeCompare(b.Kode_Siswa || ''));
+    // Urutkan berdasarkan ID_Siswa
+    data.sort((a, b) => (a.ID_Siswa || '').localeCompare(b.ID_Siswa || ''));
 
     const counts = {Hadir:0,Sakit:0,Izin:0,Alpha:0};
-    data.forEach(a => { if (counts[a.Status] !== undefined) counts[a.Status]++; });
+    data.forEach(a => { 
+      const status = a.Status || '';
+      if (counts[status] !== undefined) counts[status]++; 
+    });
     $('absenHadir').textContent = counts.Hadir;
     $('absenSakit').textContent = counts.Sakit;
     $('absenIzin').textContent = counts.Izin;
@@ -283,7 +299,7 @@
     tb.innerHTML = data.map((a, i) => `
       <tr>
         <td>${i+1}</td>
-        <td><strong>${a.Kode_Siswa || '-'}</strong></td>
+        <td><strong>${a.ID_Siswa || '-'}</strong></td>
         <td>${a.Nama || '-'}</td>
         <td>${a.Kelas || '-'}</td>
         <td><span class="tag tag-${(a.Status || '').toLowerCase()}">${a.Status || '-'}</span></td>
@@ -293,14 +309,14 @@
   }
 
   // ============================================================
-  // 5. NILAI SISWA - DENGAN KODE SISWA
+  // 5. NILAI SISWA - PAKAI HEADER SHEET: ID_Siswa, Nama, Kelas, UH, PTS, PAS, Listening, Speaking, Reading, Writing, Nilai_Akhir, Predikat
   // ============================================================
   function renderNilai(filterKelas) {
     let data = DATA.nilai;
     if (filterKelas && filterKelas !== 'all') data = data.filter(n => n.Kelas === filterKelas);
 
-    // Urutkan berdasarkan Kode_Siswa
-    data.sort((a, b) => (a.Kode_Siswa || '').localeCompare(b.Kode_Siswa || ''));
+    // Urutkan berdasarkan ID_Siswa
+    data.sort((a, b) => (a.ID_Siswa || '').localeCompare(b.ID_Siswa || ''));
 
     const tb = $('nilaiTbody');
     if (!data.length) {
@@ -310,7 +326,7 @@
     tb.innerHTML = data.map((n, i) => `
       <tr>
         <td>${i+1}</td>
-        <td><strong>${n.Kode_Siswa || '-'}</strong></td>
+        <td><strong>${n.ID_Siswa || '-'}</strong></td>
         <td>${n.Nama || '-'}</td>
         <td>${n.Kelas || '-'}</td>
         <td>${n.UH || '-'}</td>
@@ -327,7 +343,7 @@
   }
 
   // ============================================================
-  // 6. BOBOT / REKAP KELAS
+  // 6. BOBOT / REKAP KELAS - PAKAI HEADER SHEET: Kelas, UH, PTS, PAS, Listening, Speaking, Reading, Writing, Keterangan
   // ============================================================
   function renderBobot() {
     const bb = $('bobotTbody');
