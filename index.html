@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0d2818">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="IAQ Learning">
+<meta property="og:image" content="assets/icons/og-image.png">
+<meta name="msapplication-TileImage" content="assets/icons/icon-144x144.png">
+<meta name="msapplication-TileColor" content="#0d2818">
+<title>IAQ Learning</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="76x76" href="assets/icons/apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="120x120" href="assets/icons/apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="152x152" href="assets/icons/apple-touch-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon-180x180.png">
+<link rel="mask-icon" href="assets/icons/safari-pinned-tab.svg" color="#0d2818">
+<link rel="stylesheet" href="assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<!-- Splash -->
+<div id="splash" class="splash">
+  <div class="splash-content">
+    <img src="assets/icons/icon-192x192.png" alt="IAQ" class="splash-logo">
+    <h1 class="splash-title">IAQ</h1>
+    <p class="splash-subtitle">Islam Akhlaq Qur'an</p>
+    <p class="splash-level">SD - SMP</p>
+    <div class="splash-loader"><div></div></div>
+  </div>
+</div>
+
+<!-- App -->
+<div id="app" class="app hidden">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <button class="menu-btn" id="menuBtn" aria-label="Menu"><i class="fas fa-bars"></i></button>
+      <div class="header-brand" id="headerBrand">
+        <img src="assets/icons/icon-192x192.png" alt="IAQ" class="header-logo">
+        <div class="header-text">
+          <span class="header-title">IAQ Learning</span>
+          <span class="header-level">Islam Akhlaq Qur'an</span>
+        </div>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="profile-btn" id="profileBtn" aria-label="Profil"><i class="fas fa-user"></i></button>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <img src="assets/icons/icon-192x192.png" alt="IAQ">
+      <div><h3>IAQ Learning</h3><p>Islam Akhlaq Qur'an</p></div>
+    </div>
+    <ul class="nav-menu">
+      <li class="nav-item active" id="nav-item-beranda" data-page="beranda"><i class="fas fa-home"></i><span>Beranda</span></li>
+      <li class="nav-item" id="nav-item-materi" data-page="materi"><i class="fas fa-book-open"></i><span>Materi</span></li>
+      <li class="nav-item" id="nav-item-absensi" data-page="absensi"><i class="fas fa-user-check"></i><span>Absensi</span></li>
+      <li class="nav-item" id="nav-item-nilai" data-page="nilai" onclick="toggleSubmenu('nilaiSubmenu')"><i class="fas fa-chart-line"></i><span>Nilai</span><i class="fas fa-chevron-down" style="margin-left:auto;font-size:.7rem;opacity:.5"></i></li>
+      <ul class="nav-submenu" id="nilaiSubmenu">
+        <li class="nav-subitem" id="nav-item-nilai" data-page="nilai"><i class="fas fa-table"></i><span>Nilai Siswa</span></li>
+        <li class="nav-subitem" id="nav-item-rekap" data-page="rekap"><i class="fas fa-chart-pie"></i><span>Rekap Kelas</span></li>
+      </ul>
+      <li class="nav-item" id="nav-item-jadwal" data-page="jadwal"><i class="fas fa-calendar-alt"></i><span>Jadwal</span></li>
+      <li class="nav-item" id="nav-item-kelas" data-page="kelas"><i class="fas fa-chalkboard-teacher"></i><span>Kelas Online</span></li>
+      <li class="nav-item" id="nav-item-pustaka" data-page="pustaka"><i class="fas fa-folder-open"></i><span>Pustaka</span></li>
+      <li class="nav-divider"></li>
+      <li class="nav-item" id="nav-item-tentang" data-page="tentang"><i class="fas fa-info-circle"></i><span>Tentang</span></li>
+    </ul>
+    <div class="sidebar-footer"><p id="sidebarVersion">v2.2.0 | Paperless</p></div>
+  </nav>
+
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+
+    <!-- BERANDA -->
+    <section class="page active" id="beranda">
+      <div class="welcome-banner">
+        <div class="welcome-text">
+          <h2 id="welcomeGreeting">Assalamu'alaikum, Guru!</h2>
+          <p id="welcomeSub">Selamat hari ini, siap mengajar?</p>
+        </div>
+        <div class="welcome-date">
+          <span id="currentDate"></span>
+          <span id="currentDay"></span>
+        </div>
+      </div>
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card"><div class="stat-icon bg-green"><i class="fas fa-users"></i></div><div class="stat-info"><h3 id="statSiswa">-</h3><p>Total Siswa</p></div></div>
+        <div class="stat-card"><div class="stat-icon bg-gold"><i class="fas fa-book"></i></div><div class="stat-info"><h3 id="statMateri">-</h3><p>Materi Aktif</p></div></div>
+        <div class="stat-card"><div class="stat-icon bg-blue"><i class="fas fa-chalkboard"></i></div><div class="stat-info"><h3 id="statKelas">-</h3><p>Kelas Hari Ini</p></div></div>
+        <div class="stat-card"><div class="stat-icon bg-red"><i class="fas fa-exclamation-circle"></i></div><div class="stat-info"><h3 id="statPerlu">-</h3><p>Perlu Perhatian</p></div></div>
+      </div>
+      <div class="section-row">
+        <div class="card quick-links">
+          <div class="card-header"><h3><i class="fas fa-rocket"></i> Akses Cepat</h3></div>
+          <div class="quick-grid" id="quickGrid"></div>
+        </div>
+        <div class="card today-schedule">
+          <div class="card-header"><h3><i class="fas fa-clock"></i> Jadwal Hari Ini</h3></div>
+          <div class="schedule-list" id="jadwalHariIni"><p class="empty-state">Memuat jadwal...</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MATERI -->
+    <section class="page" id="materi">
+      <div class="page-header">
+        <h2><i class="fas fa-book-open"></i> Materi Pembelajaran</h2>
+        <p>Semua materi & tugas per kelas</p>
+      </div>
+      <div class="filter-bar" id="materiFilter">
+        <button class="filter-btn active" data-kelas="all">Semua</button>
+      </div>
+      <div class="materi-grid" id="materiGrid"><p class="empty-state">Memuat materi...</p></div>
+    </section>
+
+    <!-- ABSENSI -->
+    <section class="page" id="absensi">
+      <div class="page-header">
+        <h2><i class="fas fa-user-check"></i> Absensi</h2>
+        <p>Kehadiran siswa per pertemuan</p>
+      </div>
+      <div class="card">
+        <div class="card-header flex-between">
+          <div>
+            <h3>Ringkasan</h3>
+            <p class="text-muted" id="absensiDateLabel">-</p>
+          </div>
+          <select class="form-select" id="absensiKelasSelect"><option value="all">Semua Kelas</option></select>
+        </div>
+        <div class="date-picker-wrap">
+          <label>Pilih Tanggal</label>
+          <input type="date" class="date-input" id="absensiDate">
+        </div>
+        <div class="absen-summary" id="absensiSummary">
+          <div class="absen-stat"><span class="absen-number hadir" id="absenHadir">0</span><span class="absen-label">Hadir</span></div>
+          <div class="absen-stat"><span class="absen-number sakit" id="absenSakit">0</span><span class="absen-label">Sakit</span></div>
+          <div class="absen-stat"><span class="absen-number izin" id="absenIzin">0</span><span class="absen-label">Izin</span></div>
+          <div class="absen-stat"><span class="absen-number alpha" id="absenAlpha">0</span><span class="absen-label">Alpha</span></div>
+        </div>
+        <div class="absen-table-wrap">
+          <table class="data-table" id="absensiTable">
+            <thead><tr><th>No</th><th>Nama</th><th>Kelas</th><th>Status</th><th>Keterangan</th></tr></thead>
+            <tbody id="absensiTbody"><tr><td colspan="5" class="text-center">Pilih tanggal untuk melihat absensi</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- NILAI SISWA -->
+    <section class="page" id="nilai">
+      <div class="page-header">
+        <h2><i class="fas fa-table"></i> Nilai Siswa</h2>
+        <p>Rekap nilai semesteran per siswa</p>
+      </div>
+      <div class="card">
+        <div class="card-header flex-between">
+          <h3>Nilai Siswa</h3>
+          <select class="form-select" id="nilaiKelasSelect"><option value="all">Semua Kelas</option></select>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table" id="nilaiTable">
+            <thead><tr><th>No</th><th>Nama</th><th>Kelas</th><th>UH</th><th>PTS</th><th>PAS</th><th>Listen</th><th>Speak</th><th>Read</th><th>Write</th><th>Akhir</th><th>Pred</th></tr></thead>
+            <tbody id="nilaiTbody"><tr><td colspan="12" class="text-center">Memuat data...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- REKAP KELAS -->
+    <section class="page" id="rekap">
+      <div class="page-header">
+        <h2><i class="fas fa-chart-pie"></i> Rekap Kelas</h2>
+        <p>Analisis rata-rata nilai per kelas</p>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3><i class="fas fa-chart-pie"></i> Rata-rata per Kelas</h3></div>
+        <div class="table-responsive">
+          <table class="data-table" id="bobotTable">
+            <thead><tr><th>Kelas</th><th>UH</th><th>PTS</th><th>PAS</th><th>Listen</th><th>Speak</th><th>Read</th><th>Write</th><th>Keterangan</th></tr></thead>
+            <tbody id="bobotTbody"><tr><td colspan="9" class="text-center">Memuat data...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- JADWAL -->
+    <section class="page" id="jadwal">
+      <div class="page-header">
+        <h2><i class="fas fa-calendar-alt"></i> Jadwal Mengajar</h2>
+        <p>Jadwal pelajaran Bahasa Inggris</p>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Jadwal Semester Ini</h3></div>
+        <div class="schedule-grid" id="jadwalGrid"><p class="empty-state">Memuat jadwal...</p></div>
+      </div>
+    </section>
+
+    <!-- KELAS ONLINE -->
+    <section class="page" id="kelas">
+      <div class="page-header">
+        <h2><i class="fas fa-chalkboard-teacher"></i> Kelas Online</h2>
+        <p>Google Classroom & Google Meet</p>
+      </div>
+      <div class="classroom-grid" id="classroomGrid"><p class="empty-state">Memuat data...</p></div>
+    </section>
+
+    <!-- PUSTAKA -->
+    <section class="page" id="pustaka">
+      <div class="page-header">
+        <h2><i class="fas fa-folder-open"></i> Pustaka Digital</h2>
+        <p>Kumpulan dokumen & referensi</p>
+      </div>
+      <div class="pustaka-grid" id="pustakaGrid"><p class="empty-state">Memuat pustaka...</p></div>
+    </section>
+
+    <!-- TENTANG / PROFIL -->
+    <section class="page" id="tentang">
+      <div class="page-header">
+        <h2><i class="fas fa-info-circle"></i> Tentang Aplikasi</h2>
+        <p>Informasi sistem pembelajaran</p>
+      </div>
+      <div class="card">
+        <div class="about-box">
+          <img src="assets/icons/icon-192x192.png" alt="IAQ" class="about-logo">
+          <h3 id="aboutSekolah">IAQ Learning</h3>
+          <p id="aboutLevel">SD - SMP</p>
+          <p class="version" id="aboutVersion">v2.2.0</p>
+          <div class="about-info">
+            <div class="info-row"><span>Guru</span><strong id="aboutGuru">-</strong></div>
+            <div class="info-row"><span>Mapel</span><strong id="aboutMapel">-</strong></div>
+            <div class="info-row"><span>Semester</span><strong id="aboutSemester">-</strong></div>
+            <div class="info-row"><span>Tahun Ajaran</span><strong id="aboutTahun">-</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><i class="fas fa-info-circle"></i><span id="toastMsg">Notifikasi</span></div>
+
+<!-- Install Prompt -->
+<div class="install-prompt" id="installPrompt">
+  <img src="assets/icons/icon-192x192.png" alt="IAQ">
+  <div>
+    <h4>Install IAQ Learning</h4>
+    <p>Tambahkan ke layar utama untuk akses cepat</p>
+  </div>
+  <button id="installBtn">Install</button>
+  <button class="close-prompt" id="closePrompt"><i class="fas fa-times"></i></button>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
