@@ -33,7 +33,7 @@
     <h1 class="splash-title">IAQ</h1>
     <p class="splash-subtitle">Islam Akhlaq Qur'an</p>
     <p class="splash-level">SD - SMP</p>
-    <div class="splash-loader"><div></div></div>
+    <div class="splash-loader"><div class="loader-track"></div></div>
   </div>
 </div>
 
@@ -67,11 +67,7 @@
       <li class="nav-item active" id="nav-item-beranda" data-page="beranda"><i class="fas fa-home"></i><span>Beranda</span></li>
       <li class="nav-item" id="nav-item-materi" data-page="materi"><i class="fas fa-book-open"></i><span>Materi</span></li>
       <li class="nav-item" id="nav-item-absensi" data-page="absensi"><i class="fas fa-user-check"></i><span>Absensi</span></li>
-      <li class="nav-item" id="nav-item-nilai" data-page="nilai" onclick="toggleSubmenu('nilaiSubmenu')"><i class="fas fa-chart-line"></i><span>Nilai</span><i class="fas fa-chevron-down" style="margin-left:auto;font-size:.7rem;opacity:.5"></i></li>
-      <ul class="nav-submenu" id="nilaiSubmenu">
-        <li class="nav-subitem" id="nav-item-nilai" data-page="nilai"><i class="fas fa-table"></i><span>Nilai Siswa</span></li>
-        <li class="nav-subitem" id="nav-item-rekap" data-page="rekap"><i class="fas fa-chart-pie"></i><span>Rekap Kelas</span></li>
-      </ul>
+      <li class="nav-item" id="nav-item-nilai" data-page="nilai"><i class="fas fa-chart-line"></i><span>Nilai</span></li>
       <li class="nav-item" id="nav-item-jadwal" data-page="jadwal"><i class="fas fa-calendar-alt"></i><span>Jadwal</span></li>
       <li class="nav-item" id="nav-item-kelas" data-page="kelas"><i class="fas fa-chalkboard-teacher"></i><span>Kelas Online</span></li>
       <li class="nav-item" id="nav-item-pustaka" data-page="pustaka"><i class="fas fa-folder-open"></i><span>Pustaka</span></li>
@@ -161,9 +157,32 @@
       </div>
     </section>
 
-    <!-- NILAI SISWA -->
+    <!-- NILAI - DASHBOARD -->
     <section class="page" id="nilai">
       <div class="page-header">
+        <h2><i class="fas fa-chart-line"></i> Nilai & Rekap</h2>
+        <p>Pilih menu untuk melihat detail</p>
+      </div>
+      <div class="nilai-dashboard-grid" id="nilaiDashboard">
+        <div class="nilai-dashboard-card" id="goToNilaiSiswa">
+          <div class="nilai-dashboard-icon"><i class="fas fa-table"></i></div>
+          <h3>Nilai Siswa</h3>
+          <p>Rekap nilai semesteran per siswa</p>
+          <span class="nilai-dashboard-action">Lihat Selengkapnya <i class="fas fa-chevron-right"></i></span>
+        </div>
+        <div class="nilai-dashboard-card" id="goToRekapKelas">
+          <div class="nilai-dashboard-icon"><i class="fas fa-chart-pie"></i></div>
+          <h3>Rekap Kelas</h3>
+          <p>Analisis rata-rata nilai per kelas</p>
+          <span class="nilai-dashboard-action">Lihat Selengkapnya <i class="fas fa-chevron-right"></i></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- NILAI SISWA - DETAIL -->
+    <section class="page" id="nilai-siswa">
+      <div class="page-header">
+        <button class="btn-back" id="backFromNilaiSiswa"><i class="fas fa-arrow-left"></i> Kembali</button>
         <h2><i class="fas fa-table"></i> Nilai Siswa</h2>
         <p>Rekap nilai semesteran per siswa</p>
       </div>
@@ -181,9 +200,10 @@
       </div>
     </section>
 
-    <!-- REKAP KELAS -->
-    <section class="page" id="rekap">
+    <!-- REKAP KELAS - DETAIL -->
+    <section class="page" id="rekap-kelas">
       <div class="page-header">
+        <button class="btn-back" id="backFromRekapKelas"><i class="fas fa-arrow-left"></i> Kembali</button>
         <h2><i class="fas fa-chart-pie"></i> Rekap Kelas</h2>
         <p>Analisis rata-rata nilai per kelas</p>
       </div>
@@ -251,6 +271,19 @@
     </section>
 
   </main>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-container" id="modalContainer">
+    <div class="modal-header">
+      <h3 id="modalTitle">Detail</h3>
+      <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body" id="modalBody">
+      <!-- Isi modal diisi oleh JS -->
+    </div>
+  </div>
 </div>
 
 <!-- Toast -->
