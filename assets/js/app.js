@@ -136,8 +136,8 @@
     renderBeranda();
     renderMateri();
     renderAbsensi();
-    renderNilai();
-    renderBobot();
+    renderNilaiSiswa();
+    renderRekapKelas();
     renderJadwal();
     renderKelas();
     renderPustaka();
@@ -322,7 +322,7 @@
   // ============================================================
   // 5. NILAI SISWA
   // ============================================================
-  function renderNilai(filterKelas) {
+  function renderNilaiSiswa(filterKelas) {
     let data = DATA.nilai;
     if (filterKelas && filterKelas !== 'all') data = data.filter(n => n.Kelas === filterKelas);
 
@@ -333,47 +333,115 @@
       tb.innerHTML = '<tr><td colspan="13" class="text-center">Belum ada data nilai</td></tr>';
       return;
     }
-    tb.innerHTML = data.map((n, i) => `
-      <tr>
-        <td>${i+1}</td>
-        <td><strong>${n.ID_Siswa || '-'}</strong></td>
-        <td>${n.Nama || '-'}</td>
-        <td>${n.Kelas || '-'}</td>
-        <td>${n.UH || '-'}</td>
-        <td>${n.PTS || '-'}</td>
-        <td>${n.PAS || '-'}</td>
-        <td>${n.Listening || '-'}</td>
-        <td>${n.Speaking || '-'}</td>
-        <td>${n.Reading || '-'}</td>
-        <td>${n.Writing || '-'}</td>
-        <td><strong>${n.Nilai_Akhir || '-'}</strong></td>
-        <td><span class="tag tag-${(n.Predikat || '').toLowerCase()}">${n.Predikat || '-'}</span></td>
-      </tr>
-    `).join('');
+
+    const isMobile = window.innerWidth <= 768;
+
+    tb.innerHTML = data.map((n, i) => {
+      let row = `
+        <tr class="clickable-row" data-id="${n.ID_Siswa || ''}" data-kelas="${n.Kelas || ''}" data-nama="${n.Nama || ''}" data-uh="${n.UH || '-'}" data-pts="${n.PTS || '-'}" data-pas="${n.PAS || '-'}" data-listen="${n.Listening || '-'}" data-speak="${n.Speaking || '-'}" data-read="${n.Reading || '-'}" data-write="${n.Writing || '-'}" data-akhir="${n.Nilai_Akhir || '-'}" data-pred="${n.Predikat || '-'}">
+          <td>${i+1}</td>
+          <td><strong>${n.ID_Siswa || '-'}</strong></td>
+          <td>${n.Nama || '-'}</td>
+          <td>${n.Kelas || '-'}</td>
+          <td>${n.UH || '-'}</td>
+          <td>${n.PTS || '-'}</td>
+          <td>${n.PAS || '-'}`;
+      
+      if (!isMobile) {
+        row += `
+          <td>${n.Listening || '-'}</td>
+          <td>${n.Speaking || '-'}</td>
+          <td>${n.Reading || '-'}</td>
+          <td>${n.Writing || '-'}</td>`;
+      }
+      
+      row += `
+          <td><strong>${n.Nilai_Akhir || '-'}</strong></td>
+          <td><span class="tag tag-${(n.Predikat || '').toLowerCase()}">${n.Predikat || '-'}</span></td>
+          <td><span class="row-arrow"><i class="fas fa-chevron-right"></i></span></td>
+        </tr>
+      `;
+      return row;
+    }).join('');
+
+    // Event listener untuk row click
+    document.querySelectorAll('#nilaiTbody .clickable-row').forEach(row => {
+      row.addEventListener('click', function(e) {
+        // Jangan trigger jika klik di dalam link atau button
+        if (e.target.closest('a') || e.target.closest('button')) return;
+        const data = {
+          id: this.dataset.id,
+          nama: this.dataset.nama,
+          kelas: this.dataset.kelas,
+          uh: this.dataset.uh,
+          pts: this.dataset.pts,
+          pas: this.dataset.pas,
+          listen: this.dataset.listen,
+          speak: this.dataset.speak,
+          read: this.dataset.read,
+          write: this.dataset.write,
+          akhir: this.dataset.akhir,
+          pred: this.dataset.pred
+        };
+        openModal('Detail Nilai Siswa', data, 'siswa');
+      });
+    });
   }
 
   // ============================================================
-  // 6. BOBOT / REKAP KELAS
+  // 6. REKAP KELAS
   // ============================================================
-  function renderBobot() {
+  function renderRekapKelas() {
     const bb = $('bobotTbody');
     if (!DATA.bobot.length) {
       bb.innerHTML = '<tr><td colspan="9" class="text-center">Belum ada data rekap</td></tr>';
       return;
     }
-    bb.innerHTML = DATA.bobot.map(b => `
-      <tr>
-        <td><strong>${b.Kelas || '-'}</strong></td>
-        <td>${b.UH || '-'}</td>
-        <td>${b.PTS || '-'}</td>
-        <td>${b.PAS || '-'}</td>
-        <td>${b.Listening || '-'}</td>
-        <td>${b.Speaking || '-'}</td>
-        <td>${b.Reading || '-'}</td>
-        <td>${b.Writing || '-'}</td>
-        <td>${b.Keterangan || '-'}</td>
-      </tr>
-    `).join('');
+
+    const isMobile = window.innerWidth <= 768;
+
+    bb.innerHTML = DATA.bobot.map((b, i) => {
+      let row = `
+        <tr class="clickable-row" data-kelas="${b.Kelas || '-'}" data-uh="${b.UH || '-'}" data-pts="${b.PTS || '-'}" data-pas="${b.PAS || '-'}" data-listen="${b.Listening || '-'}" data-speak="${b.Speaking || '-'}" data-read="${b.Reading || '-'}" data-write="${b.Writing || '-'}" data-keterangan="${b.Keterangan || '-'}">
+          <td><strong>${b.Kelas || '-'}</strong></td>
+          <td>${b.UH || '-'}</td>
+          <td>${b.PTS || '-'}</td>
+          <td>${b.PAS || '-'}`;
+      
+      if (!isMobile) {
+        row += `
+          <td>${b.Listening || '-'}</td>
+          <td>${b.Speaking || '-'}</td>
+          <td>${b.Reading || '-'}</td>
+          <td>${b.Writing || '-'}</td>`;
+      }
+      
+      row += `
+          <td>${b.Keterangan || '-'}</td>
+          <td><span class="row-arrow"><i class="fas fa-chevron-right"></i></span></td>
+        </tr>
+      `;
+      return row;
+    }).join('');
+
+    // Event listener untuk row click
+    document.querySelectorAll('#bobotTbody .clickable-row').forEach(row => {
+      row.addEventListener('click', function(e) {
+        if (e.target.closest('a') || e.target.closest('button')) return;
+        const data = {
+          kelas: this.dataset.kelas,
+          uh: this.dataset.uh,
+          pts: this.dataset.pts,
+          pas: this.dataset.pas,
+          listen: this.dataset.listen,
+          speak: this.dataset.speak,
+          read: this.dataset.read,
+          write: this.dataset.write,
+          keterangan: this.dataset.keterangan
+        };
+        openModal('Detail Rekap Kelas', data, 'rekap');
+      });
+    });
   }
 
   // ============================================================
@@ -486,7 +554,145 @@
   }
 
   // ============================================================
-  // 11. FILTERS
+  // 11. MODAL
+  // ============================================================
+  function openModal(title, data, type) {
+    const overlay = $('modalOverlay');
+    const container = $('modalContainer');
+    const titleEl = $('modalTitle');
+    const body = $('modalBody');
+
+    if (!overlay || !body) return;
+
+    titleEl.textContent = title;
+
+    let html = '';
+
+    if (type === 'siswa') {
+      html = `
+        <div class="modal-detail-row">
+          <span class="label">ID Siswa</span>
+          <span class="value">${data.id || '-'}</span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="label">Nama</span>
+          <span class="value">${data.nama || '-'}</span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="label">Kelas</span>
+          <span class="value">${data.kelas || '-'}</span>
+        </div>
+        <div class="modal-detail-section">
+          <h4>Nilai</h4>
+          <div class="modal-detail-row">
+            <span class="label">UH</span>
+            <span class="value">${data.uh || '-'}</span>
+          </div>
+          <div class="modal-detail-row">
+            <span class="label">PTS</span>
+            <span class="value">${data.pts || '-'}</span>
+          </div>
+          <div class="modal-detail-row">
+            <span class="label">PAS</span>
+            <span class="value">${data.pas || '-'}</span>
+          </div>
+        </div>
+        <div class="modal-detail-section">
+          <h4>4C Skills</h4>
+          <div class="skill-grid">
+            <div class="skill-item">
+              <span class="skill-label">Listening</span>
+              <span class="skill-value">${data.listen || '-'}</span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-label">Speaking</span>
+              <span class="skill-value">${data.speak || '-'}</span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-label">Reading</span>
+              <span class="skill-value">${data.read || '-'}</span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-label">Writing</span>
+              <span class="skill-value">${data.write || '-'}</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-detail-row" style="margin-top:12px;border-top:2px solid var(--border);padding-top:12px;">
+          <span class="label" style="font-weight:600;">Nilai Akhir</span>
+          <span class="value highlight">${data.akhir || '-'}</span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="label">Predikat</span>
+          <span class="value"><span class="tag tag-${(data.pred || '').toLowerCase()}">${data.pred || '-'}</span></span>
+        </div>
+      `;
+    } else if (type === 'rekap') {
+      html = `
+        <div class="modal-detail-row">
+          <span class="label">Kelas</span>
+          <span class="value"><strong>${data.kelas || '-'}</strong></span>
+        </div>
+        <div class="modal-detail-section">
+          <h4>Rata-rata Nilai</h4>
+          <div class="modal-detail-row">
+            <span class="label">UH</span>
+            <span class="value">${data.uh || '-'}</span>
+          </div>
+          <div class="modal-detail-row">
+            <span class="label">PTS</span>
+            <span class="value">${data.pts || '-'}</span>
+          </div>
+          <div class="modal-detail-row">
+            <span class="label">PAS</span>
+            <span class="value">${data.pas || '-'}</span>
+          </div>
+        </div>
+        <div class="modal-detail-section">
+          <h4>4C Skills</h4>
+          <div class="skill-grid">
+            <div class="skill-item">
+              <span class="skill-label">Listening</span>
+              <span class="skill-value">${data.listen || '-'}</span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-label">Speaking</span>
+              <span class="skill-value">${data.speak || '-'}</span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-label">Reading</span>
+              <span class="skill-value">${data.read || '-'}</span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-label">Writing</span>
+              <span class="skill-value">${data.write || '-'}</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-detail-row" style="margin-top:12px;border-top:2px solid var(--border);padding-top:12px;">
+          <span class="label" style="font-weight:600;">Keterangan</span>
+          <span class="value">${data.keterangan || '-'}</span>
+        </div>
+      `;
+    }
+
+    body.innerHTML = html;
+
+    // Cegah scroll body
+    document.body.style.overflow = 'hidden';
+    overlay.classList.add('open');
+  }
+
+  function closeModal() {
+    const overlay = $('modalOverlay');
+    if (overlay) {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  // ============================================================
+  // 12. FILTERS
   // ============================================================
   function buildFilters() {
     const mf = $('materiFilter');
@@ -531,10 +737,13 @@
       opt.textContent = 'Kelas ' + k;
       ns.appendChild(opt);
     });
+    ns.addEventListener('change', function() {
+      renderNilaiSiswa(this.value);
+    });
   }
 
   // ============================================================
-  // 12. NAVIGATION - DENGAN SINKRONISASI BOTTOM NAV
+  // 13. NAVIGATION
   // ============================================================
   function openSidebar() {
     $('sidebar').classList.add('open');
@@ -560,7 +769,6 @@
 
   function navigateTo(pageId) {
     $$('.nav-item').forEach(item => item.classList.remove('active'));
-    $$('.nav-subitem').forEach(item => item.classList.remove('active'));
     $$('.page').forEach(page => page.classList.remove('active'));
 
     const navItem = $(`nav-item-${pageId}`);
@@ -581,13 +789,46 @@
     }
   }
 
-  function toggleSubmenu(id) {
-    const el = $(id);
-    if (el) el.classList.toggle('open');
+  function navigateToNilaiDetail(type) {
+    $$('.nav-item').forEach(item => item.classList.remove('active'));
+    $$('.page').forEach(page => page.classList.remove('active'));
+
+    const navItem = $('nav-item-nilai');
+    if (navItem) navItem.classList.add('active');
+
+    const pageId = type === 'siswa' ? 'nilai-siswa' : 'rekap-kelas';
+    const page = $(pageId);
+    if (page) page.classList.add('active');
+
+    // Update bottom nav ke nilai
+    updateBottomNav('nilai');
+
+    if (window.innerWidth < 768) {
+      closeSidebar();
+    }
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  function goToNilaiDashboard() {
+    $$('.nav-item').forEach(item => item.classList.remove('active'));
+    $$('.page').forEach(page => page.classList.remove('active'));
+
+    const navItem = $('nav-item-nilai');
+    if (navItem) navItem.classList.add('active');
+
+    const page = $('nilai');
+    if (page) page.classList.add('active');
+
+    updateBottomNav('nilai');
+
+    if (window.innerWidth < 768) {
+      closeSidebar();
+    }
+    window.scrollTo({top: 0, behavior: 'smooth'});
   }
 
   // ============================================================
-  // 13. BOTTOM NAVIGATION + AUTO-HIDE
+  // 14. BOTTOM NAVIGATION + AUTO-HIDE
   // ============================================================
   function initBottomNav() {
     const navItems = document.querySelectorAll('.bottom-nav-item');
@@ -607,7 +848,6 @@
       });
     });
 
-    // Auto-hide bottom nav on scroll
     if (bottomNav) {
       window.addEventListener('scroll', function() {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -626,7 +866,6 @@
         lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
       }, { passive: true });
 
-      // Show bottom nav when touching/clicking anywhere on mobile
       document.addEventListener('touchstart', function() {
         if (bottomNav.classList.contains('hide')) {
           clearTimeout(scrollTimeout);
@@ -639,7 +878,7 @@
   }
 
   // ============================================================
-  // 14. TOAST
+  // 15. TOAST
   // ============================================================
   window.showToast = function(msg) {
     const toast = $('toast');
@@ -651,7 +890,7 @@
   };
 
   // ============================================================
-  // 15. DATE PICKER
+  // 16. DATE PICKER
   // ============================================================
   function initDatePicker() {
     const dp = $('absensiDate');
@@ -680,20 +919,13 @@
       });
     }
 
-    const ns = $('nilaiKelasSelect');
-    if (ns) {
-      ns.addEventListener('change', function() {
-        renderNilai(this.value);
-      });
-    }
-
     const parts = dp.value.split('-');
     const tanggalStr = `${parts[2]}/${parts[1]}/${parts[0]}`;
     renderAbsensi(tanggalStr, 'all');
   }
 
   // ============================================================
-  // 16. INSTALL PROMPT
+  // 17. INSTALL PROMPT
   // ============================================================
   let deferredPrompt;
   function initInstallPrompt() {
@@ -726,7 +958,7 @@
   }
 
   // ============================================================
-  // 17. SERVICE WORKER
+  // 18. SERVICE WORKER
   // ============================================================
   function initServiceWorker() {
     if ('serviceWorker' in navigator) {
@@ -735,7 +967,7 @@
   }
 
   // ============================================================
-  // 18. DARK MODE
+  // 19. DARK MODE
   // ============================================================
   function initDarkMode() {
     if (localStorage.getItem('darkMode') === 'true') {
@@ -744,7 +976,7 @@
   }
 
   // ============================================================
-  // 19. SPLASH - PERBAIKAN LOADING BAR
+  // 20. SPLASH
   // ============================================================
   function initSplash() {
     const splash = $('splash');
@@ -770,7 +1002,25 @@
   }
 
   // ============================================================
-  // 20. INIT
+  // 21. WINDOW RESIZE - refresh tabel saat resize
+  // ============================================================
+  function handleResize() {
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        // Refresh tabel nilai dan rekap saat resize
+        const nilaiSelect = $('nilaiKelasSelect');
+        if (nilaiSelect) {
+          renderNilaiSiswa(nilaiSelect.value);
+        }
+        renderRekapKelas();
+      }, 300);
+    });
+  }
+
+  // ============================================================
+  // 22. INIT
   // ============================================================
   function init() {
     initDarkMode();
@@ -778,6 +1028,7 @@
     initInstallPrompt();
     initBottomNav();
     initSplash();
+    handleResize();
 
     const headerBrand = $('headerBrand');
     if (headerBrand) headerBrand.addEventListener('click', () => navigateTo('beranda'));
@@ -802,25 +1053,61 @@
     const overlay = $('overlay');
     if (overlay) overlay.addEventListener('click', closeSidebar);
 
+    // Sidebar navigation
     $$('.nav-item').forEach(item => {
       item.addEventListener('click', () => {
         const page = item.dataset.page;
-        if (page) navigateTo(page);
+        if (page) {
+          if (page === 'nilai') {
+            goToNilaiDashboard();
+          } else {
+            navigateTo(page);
+          }
+        }
       });
     });
-    $$('.nav-subitem').forEach(item => {
-      item.addEventListener('click', () => {
-        const page = item.dataset.page;
-        if (page) navigateTo(page);
+
+    // Nilai dashboard cards
+    const goToNilaiSiswa = $('goToNilaiSiswa');
+    if (goToNilaiSiswa) {
+      goToNilaiSiswa.addEventListener('click', () => navigateToNilaiDetail('siswa'));
+    }
+
+    const goToRekapKelas = $('goToRekapKelas');
+    if (goToRekapKelas) {
+      goToRekapKelas.addEventListener('click', () => navigateToNilaiDetail('rekap'));
+    }
+
+    // Back buttons
+    const backFromNilaiSiswa = $('backFromNilaiSiswa');
+    if (backFromNilaiSiswa) {
+      backFromNilaiSiswa.addEventListener('click', goToNilaiDashboard);
+    }
+
+    const backFromRekapKelas = $('backFromRekapKelas');
+    if (backFromRekapKelas) {
+      backFromRekapKelas.addEventListener('click', goToNilaiDashboard);
+    }
+
+    // Modal close
+    const modalClose = $('modalClose');
+    if (modalClose) {
+      modalClose.addEventListener('click', closeModal);
+    }
+
+    const modalOverlay = $('modalOverlay');
+    if (modalOverlay) {
+      modalOverlay.addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeModal();
+        }
       });
-    });
+    }
 
     loadAll().then(() => {
       initDatePicker();
     });
   }
-
-  window.toggleSubmenu = toggleSubmenu;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
