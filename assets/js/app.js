@@ -553,7 +553,7 @@
     }
   }
 
-  // ============================================================
+    // ============================================================
   // 11. MODAL
   // ============================================================
   function openModal(title, data, type) {
@@ -570,18 +570,17 @@
 
     if (type === 'siswa') {
       html = `
-        <div class="modal-detail-row">
-          <span class="label">ID Siswa</span>
-          <span class="value">${data.id || '-'}</span>
+        <!-- IDENTITAS - Rapat -->
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:2px 16px;margin-bottom:10px;padding:6px 10px;background:var(--bg);border-radius:6px;">
+          <span style="font-size:.68rem;color:var(--text-secondary);">ID</span>
+          <span style="font-size:.72rem;font-weight:500;text-align:right;">${data.id || '-'}</span>
+          <span style="font-size:.68rem;color:var(--text-secondary);">Nama</span>
+          <span style="font-size:.72rem;font-weight:500;text-align:right;">${data.nama || '-'}</span>
+          <span style="font-size:.68rem;color:var(--text-secondary);">Kelas</span>
+          <span style="font-size:.72rem;font-weight:500;text-align:right;">${data.kelas || '-'}</span>
         </div>
-        <div class="modal-detail-row">
-          <span class="label">Nama</span>
-          <span class="value">${data.nama || '-'}</span>
-        </div>
-        <div class="modal-detail-row">
-          <span class="label">Kelas</span>
-          <span class="value">${data.kelas || '-'}</span>
-        </div>
+
+        <!-- NILAI -->
         <div class="modal-detail-section">
           <h4>Nilai</h4>
           <div class="modal-detail-row">
@@ -597,8 +596,10 @@
             <span class="value">${data.pas || '-'}</span>
           </div>
         </div>
+
+        <!-- SKILLS -->
         <div class="modal-detail-section">
-          <h4>4C Skills</h4>
+          <h4>Skills</h4>
           <div class="skill-grid">
             <div class="skill-item">
               <span class="skill-label">Listening</span>
@@ -618,23 +619,28 @@
             </div>
           </div>
         </div>
-        <div class="modal-detail-row" style="margin-top:12px;border-top:2px solid var(--border);padding-top:12px;">
-          <span class="label" style="font-weight:600;">Nilai Akhir</span>
-          <span class="value highlight">${data.akhir || '-'}</span>
+
+        <!-- RESULT - Highlight -->
+        <div class="modal-result-row">
+          <span class="label">Nilai Akhir</span>
+          <span class="value">${data.akhir || '-'}</span>
         </div>
-        <div class="modal-detail-row">
+        <div class="modal-result-row" style="margin-top:4px;">
           <span class="label">Predikat</span>
           <span class="value"><span class="tag tag-${(data.pred || '').toLowerCase()}">${data.pred || '-'}</span></span>
         </div>
       `;
     } else if (type === 'rekap') {
       html = `
-        <div class="modal-detail-row">
-          <span class="label">Kelas</span>
-          <span class="value"><strong>${data.kelas || '-'}</strong></span>
+        <!-- IDENTITAS - Rapat -->
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:2px 16px;margin-bottom:10px;padding:6px 10px;background:var(--bg);border-radius:6px;">
+          <span style="font-size:.68rem;color:var(--text-secondary);">Kelas</span>
+          <span style="font-size:.72rem;font-weight:600;text-align:right;">${data.kelas || '-'}</span>
         </div>
+
+        <!-- NILAI -->
         <div class="modal-detail-section">
-          <h4>Rata-rata Nilai</h4>
+          <h4>Nilai</h4>
           <div class="modal-detail-row">
             <span class="label">UH</span>
             <span class="value">${data.uh || '-'}</span>
@@ -648,29 +654,33 @@
             <span class="value">${data.pas || '-'}</span>
           </div>
         </div>
+
+        <!-- SKILLS - Highlight -->
         <div class="modal-detail-section">
-          <h4>4C Skills</h4>
+          <h4>Skills</h4>
           <div class="skill-grid">
-            <div class="skill-item">
+            <div class="skill-item" style="background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.1);">
               <span class="skill-label">Listening</span>
-              <span class="skill-value">${data.listen || '-'}</span>
+              <span class="skill-value" style="color:var(--accent-dark);">${data.listen || '-'}</span>
             </div>
-            <div class="skill-item">
+            <div class="skill-item" style="background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.1);">
               <span class="skill-label">Speaking</span>
-              <span class="skill-value">${data.speak || '-'}</span>
+              <span class="skill-value" style="color:var(--accent-dark);">${data.speak || '-'}</span>
             </div>
-            <div class="skill-item">
+            <div class="skill-item" style="background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.1);">
               <span class="skill-label">Reading</span>
-              <span class="skill-value">${data.read || '-'}</span>
+              <span class="skill-value" style="color:var(--accent-dark);">${data.read || '-'}</span>
             </div>
-            <div class="skill-item">
+            <div class="skill-item" style="background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.1);">
               <span class="skill-label">Writing</span>
-              <span class="skill-value">${data.write || '-'}</span>
+              <span class="skill-value" style="color:var(--accent-dark);">${data.write || '-'}</span>
             </div>
           </div>
         </div>
-        <div class="modal-detail-row" style="margin-top:12px;border-top:2px solid var(--border);padding-top:12px;">
-          <span class="label" style="font-weight:600;">Keterangan</span>
+
+        <!-- KETERANGAN -->
+        <div class="modal-keterangan">
+          <span class="label">Keterangan</span>
           <span class="value">${data.keterangan || '-'}</span>
         </div>
       `;
