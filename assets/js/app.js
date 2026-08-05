@@ -8,7 +8,7 @@
     if (saved) {
       try {
         window.IAQ_CONFIG = JSON.parse(saved);
-        console.log('✅ Config loaded from localStorage');
+        console.log('Config loaded from localStorage');
         return;
       } catch (e) {
         console.warn('Gagal parse config dari localStorage, pakai default');
@@ -16,7 +16,7 @@
     }
     
     if (!window.IAQ_CONFIG) {
-      console.warn('⚠️ IAQ_CONFIG tidak ditemukan, gunakan fallback');
+      console.warn('IAQ_CONFIG tidak ditemukan, gunakan fallback');
       window.IAQ_CONFIG = {
         NAMA_GURU: 'Guru',
         MAPEL: 'Pelajaran',
@@ -40,7 +40,7 @@
         VERSI: 'v2.2.0'
       };
     }
-    console.log('✅ Config loaded from data.js');
+    console.log('Config loaded from data.js');
   }
 
   loadConfig();
@@ -118,7 +118,7 @@
     });
     DATA.kelasList = Array.from(set).sort((a,b) => String(a).localeCompare(String(b), undefined, {numeric:true}));
 
-    console.log('📊 Data loaded:', {
+    console.log('Data loaded:', {
       siswa: DATA.siswa.length,
       jadwal: DATA.jadwal.length,
       materi: DATA.materi.length,
@@ -143,6 +143,7 @@
     renderPustaka();
     renderTentang();
     buildFilters();
+    animateStatCards();
   }
 
   // ============================================================
@@ -153,16 +154,13 @@
     const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
     $('currentDate').textContent = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
     
-    // Hanya tampilkan hari untuk keperluan statistik, tidak untuk ucapan
     const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
     $('currentDay').textContent = days[now.getDay()];
 
-    // GREETING - Ucapan Statis (tanpa hari)
     const guru = CFG.NAMA_GURU || 'Guru';
     $('welcomeGreeting').textContent = `Assalamu'alaikum, ${guru}!`;
     $('welcomeSub').textContent = `Selamat datang di SIAQ Learning!`;
 
-    // Stats
     $('statSiswa').textContent = DATA.siswa.length;
     $('statMateri').textContent = DATA.materi.length;
 
@@ -216,6 +214,28 @@
         <span>${link.nama}</span>
       </a>
     `).join('');
+  }
+
+  // ============================================================
+  // 2b. ANIMATE STAT CARDS
+  // ============================================================
+  function animateStatCards() {
+    const cards = document.querySelectorAll('.stat-card');
+    if (!cards.length) return;
+    
+    cards.forEach((card, index) => {
+      card.classList.remove('show', 'slide-left', 'slide-right');
+      
+      if (index < 2) {
+        card.classList.add('slide-left');
+      } else {
+        card.classList.add('slide-right');
+      }
+      
+      setTimeout(() => {
+        card.classList.add('show');
+      }, 50 + (index * 80));
+    });
   }
 
   // ============================================================
@@ -425,20 +445,20 @@
   // 9. PUSTAKA
   // ============================================================
   function renderPustaka() {
-  const grid = $('pustakaGrid');
-  const pustaka = CFG.PUSTAKA || [];
-  if (!pustaka.length) {
-    grid.innerHTML = '<p class="empty-state">Belum ada pustaka</p>';
-    return;
+    const grid = $('pustakaGrid');
+    const pustaka = CFG.PUSTAKA || [];
+    if (!pustaka.length) {
+      grid.innerHTML = '<p class="empty-state">Belum ada pustaka</p>';
+      return;
+    }
+    grid.innerHTML = pustaka.map(p => `
+      <a href="${p.url}" class="pustaka-card">
+        <div class="pustaka-icon"><i class="fas ${p.icon}"></i></div>
+        <h4>${p.nama}</h4>
+        <p>Klik untuk membuka</p>
+      </a>
+    `).join('');
   }
-  grid.innerHTML = pustaka.map(p => `
-    <a href="${p.url}" class="pustaka-card">
-      <div class="pustaka-icon"><i class="fas ${p.icon}"></i></div>
-      <h4>${p.nama}</h4>
-      <p>Klik untuk membuka</p>
-    </a>
-  `).join('');
-}
 
   // ============================================================
   // 10. TENTANG / PROFIL
@@ -461,7 +481,7 @@
       if (semester) semester.textContent = (CFG.SEMESTER || '') + ' ' + (CFG.TAHUN_AJARAN || '') || '-';
       if (tahun) tahun.textContent = CFG.TAHUN_AJARAN || '-';
     } catch (e) {
-      console.error('❌ Error di renderTentang:', e);
+      console.error('Error di renderTentang:', e);
     }
   }
 
@@ -528,7 +548,6 @@
     document.body.style.overflow = '';
   }
 
-  // Fungsi untuk update bottom nav active state
   function updateBottomNav(pageId) {
     const navItems = document.querySelectorAll('.bottom-nav-item');
     navItems.forEach(item => {
@@ -540,7 +559,6 @@
   }
 
   function navigateTo(pageId) {
-    // Update sidebar
     $$('.nav-item').forEach(item => item.classList.remove('active'));
     $$('.nav-subitem').forEach(item => item.classList.remove('active'));
     $$('.page').forEach(page => page.classList.remove('active'));
@@ -551,14 +569,16 @@
     const page = $(pageId);
     if (page) page.classList.add('active');
 
-    // UPDATE BOTTOM NAV - SINKRON!
     updateBottomNav(pageId);
 
-    // Close sidebar di mobile
     if (window.innerWidth < 768) {
       closeSidebar();
     }
     window.scrollTo({top: 0, behavior: 'smooth'});
+    
+    if (pageId === 'beranda') {
+      setTimeout(animateStatCards, 300);
+    }
   }
 
   function toggleSubmenu(id) {
@@ -567,23 +587,55 @@
   }
 
   // ============================================================
-  // 13. BOTTOM NAVIGATION
+  // 13. BOTTOM NAVIGATION + AUTO-HIDE
   // ============================================================
   function initBottomNav() {
     const navItems = document.querySelectorAll('.bottom-nav-item');
+    const bottomNav = document.getElementById('bottomNav');
+    let lastScrollTop = 0;
+    let scrollTimeout = null;
+
     navItems.forEach(item => {
       item.addEventListener('click', function(e) {
         e.preventDefault();
         const page = this.dataset.page;
         if (page) {
-          // Update bottom nav
           navItems.forEach(n => n.classList.remove('active'));
           this.classList.add('active');
-          // Navigate
           navigateTo(page);
         }
       });
     });
+
+    // Auto-hide bottom nav on scroll
+    if (bottomNav) {
+      window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const isAtBottom = (window.innerHeight + scrollTop) >= document.documentElement.scrollHeight - 100;
+        
+        if (isAtBottom) {
+          bottomNav.classList.remove('hide');
+          return;
+        }
+        
+        if (scrollTop > lastScrollTop && scrollTop > 80) {
+          bottomNav.classList.add('hide');
+        } else if (scrollTop < lastScrollTop || scrollTop <= 80) {
+          bottomNav.classList.remove('hide');
+        }
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+      }, { passive: true });
+
+      // Show bottom nav when touching/clicking anywhere on mobile
+      document.addEventListener('touchstart', function() {
+        if (bottomNav.classList.contains('hide')) {
+          clearTimeout(scrollTimeout);
+          scrollTimeout = setTimeout(() => {
+            bottomNav.classList.remove('hide');
+          }, 100);
+        }
+      }, { passive: true });
+    }
   }
 
   // ============================================================
@@ -692,29 +744,47 @@
   }
 
   // ============================================================
-  // 19. INIT
+  // 19. SPLASH - PERBAIKAN LOADING BAR
+  // ============================================================
+  function initSplash() {
+    const splash = $('splash');
+    const loaderTrack = splash ? splash.querySelector('.loader-track') : null;
+    
+    if (loaderTrack) {
+      setTimeout(() => {
+        if (splash) {
+          splash.classList.add('hidden');
+          const app = $('app');
+          if (app) app.classList.remove('hidden');
+        }
+      }, 1800);
+    } else {
+      setTimeout(() => {
+        if (splash) {
+          splash.classList.add('hidden');
+          const app = $('app');
+          if (app) app.classList.remove('hidden');
+        }
+      }, 2000);
+    }
+  }
+
+  // ============================================================
+  // 20. INIT
   // ============================================================
   function init() {
     initDarkMode();
     initServiceWorker();
     initInstallPrompt();
     initBottomNav();
-
-    setTimeout(() => {
-      const splash = $('splash');
-      const app = $('app');
-      if (splash) splash.classList.add('hidden');
-      if (app) app.classList.remove('hidden');
-    }, 2000);
+    initSplash();
 
     const headerBrand = $('headerBrand');
     if (headerBrand) headerBrand.addEventListener('click', () => navigateTo('beranda'));
 
-    // PROFILE BUTTON → TENTANG + BOTTOM NAV SINKRON
     const profileBtn = $('profileBtn');
     if (profileBtn) {
       profileBtn.addEventListener('click', function() {
-        // Update bottom nav ke profil
         const navItems = document.querySelectorAll('.bottom-nav-item');
         navItems.forEach(item => {
           item.classList.remove('active');
