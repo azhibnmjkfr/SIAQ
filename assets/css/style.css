@@ -393,3 +393,226 @@ body {
 ::-webkit-scrollbar-track {background:transparent}
 ::-webkit-scrollbar-thumb {background:var(--border);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover {background:var(--primary)}
+
+/* ============================================
+   PREMIUM ENHANCEMENTS
+   (Tanpa mengubah desain existing Anda)
+   ============================================ */
+
+/* ===== GLASSMORPHISM UNTUK WELCOME BANNER ===== */
+.welcome-banner {
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-banner::after {
+  content: '';
+  position: absolute;
+  bottom: -20%;
+  left: -10%;
+  width: 200px;
+  height: 200px;
+  background: rgba(212, 175, 55, 0.05);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.welcome-date {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+}
+
+/* ===== CARD HOVER LEBIH HALUS ===== */
+.card {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* ===== STATS CARD DENGAN BORDER ACCENT ===== */
+.stat-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stat-card:hover::after {
+  opacity: 1;
+}
+
+/* ===== BOTTOM NAV (Jika Anda pakai) ===== */
+.bottom-nav {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+}
+
+.bottom-nav-item.active i {
+  color: var(--accent);
+}
+
+.bottom-nav-item.active::before {
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+}
+
+/* ===== DARK MODE UNTUK BOTTOM NAV ===== */
+.dark .bottom-nav {
+  background: rgba(20, 46, 30, 0.92);
+}
+
+/* ===== TOAST LEBIH ELEGAN ===== */
+.toast {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ===== MATERI CARD EFFECT ===== */
+.materi-card {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.materi-card:hover {
+  transform: translateY(-4px);
+}
+
+.materi-cover {
+  position: relative;
+  overflow: hidden;
+}
+
+.materi-cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.1) 100%);
+  pointer-events: none;
+}
+
+/* ===== FILTER BTN LEBIH HALUS ===== */
+.filter-btn {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.filter-btn:active {
+  transform: scale(0.95);
+}
+
+/* ===== TAG PREDIKAT DENGAN GRADIENT ===== */
+.tag-a {
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+  color: #065f46;
+}
+
+.tag-b {
+  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+  color: #1e40af;
+}
+
+.tag-c {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  color: #92400e;
+}
+
+.tag-d {
+  background: linear-gradient(135deg, #fee2e2, #fca5a5);
+  color: #991b1b;
+}
+
+/* ===== RESPONSIVE SPACING ===== */
+@media (max-width: 640px) {
+  .welcome-banner {
+    padding: 18px 16px;
+  }
+  
+  .welcome-text h2 {
+    font-size: 1rem;
+  }
+  
+  .stat-card {
+    padding: 12px;
+  }
+  
+  .stat-info h3 {
+    font-size: 1.1rem;
+  }
+  
+  .card-header {
+    padding: 12px 16px;
+  }
+  
+  .card-header h3 {
+    font-size: 0.85rem;
+  }
+}
+
+/* ===== LOADING SKELETON ===== */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg) 25%, var(--border) 50%, var(--bg) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ===== SCROLLBAR CUSTOM ===== */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+/* ===== PRINT STYLE ===== */
+@media print {
+  .header,
+  .sidebar,
+  .bottom-nav,
+  .overlay,
+  .toast,
+  .install-prompt {
+    display: none !important;
+  }
+  
+  .main-content {
+    margin: 0 !important;
+    padding: 20px !important;
+  }
+  
+  .card {
+    break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+  }
+}
