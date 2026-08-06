@@ -329,6 +329,7 @@
     data.sort((a, b) => (a.ID_Siswa || '').localeCompare(b.ID_Siswa || ''));
 
     const tb = $('nilaiTbody');
+    const table = document.getElementById('nilaiTable');
     if (!data.length) {
       tb.innerHTML = '<tr><td colspan="13" class="text-center">Belum ada data nilai</td></tr>';
       return;
@@ -336,16 +337,37 @@
 
     const isMobile = window.innerWidth <= 768;
 
+    // HEADER DINAMIS
+    let headerRow = `<tr>`;
+    if (!isMobile) {
+      headerRow += `<th>No</th>`;
+    }
+    headerRow += `<th>ID</th><th>Nama</th><th>Kelas</th><th>NH</th><th>PTS</th><th>PAS</th>`;
+    if (!isMobile) {
+      headerRow += `<th>Listen</th><th>Speak</th><th>Read</th><th>Write</th>`;
+    }
+    headerRow += `<th>Akhir</th><th>Mark</th><th></th></tr>`;
+    
+    // Update header
+    const thead = table.querySelector('thead');
+    if (thead) {
+      thead.innerHTML = headerRow;
+    }
+
+    // BODY DINAMIS
     tb.innerHTML = data.map((n, i) => {
-      let row = `
-        <tr class="clickable-row" data-id="${n.ID_Siswa || ''}" data-kelas="${n.Kelas || ''}" data-nama="${n.Nama || ''}" data-uh="${n.UH || '-'}" data-pts="${n.PTS || '-'}" data-pas="${n.PAS || '-'}" data-listen="${n.Listening || '-'}" data-speak="${n.Speaking || '-'}" data-read="${n.Reading || '-'}" data-write="${n.Writing || '-'}" data-akhir="${n.Nilai_Akhir || '-'}" data-pred="${n.Predikat || '-'}">
-          <td>${i+1}</td>
-          <td><strong>${n.ID_Siswa || '-'}</strong></td>
-          <td>${n.Nama || '-'}</td>
-          <td>${n.Kelas || '-'}</td>
-          <td>${n.UH || '-'}</td>
-          <td>${n.PTS || '-'}</td>
-          <td>${n.PAS || '-'}`;
+      let row = `<tr class="clickable-row" data-id="${n.ID_Siswa || ''}" data-kelas="${n.Kelas || ''}" data-nama="${n.Nama || ''}" data-nh="${n.NH || '-'}" data-pts="${n.PTS || '-'}" data-pas="${n.PAS || '-'}" data-listen="${n.Listening || '-'}" data-speak="${n.Speaking || '-'}" data-read="${n.Reading || '-'}" data-write="${n.Writing || '-'}" data-akhir="${n.Nilai_Akhir || '-'}" data-mark="${n.Mark || '-'}">`;
+      
+      if (!isMobile) {
+        row += `<td>${i+1}</td>`;
+      }
+      row += `
+        <td><strong>${n.ID_Siswa || '-'}</strong></td>
+        <td>${n.Nama || '-'}</td>
+        <td>${n.Kelas || '-'}</td>
+        <td>${n.NH || '-'}</td>
+        <td>${n.PTS || '-'}</td>
+        <td>${n.PAS || '-'}`;
       
       if (!isMobile) {
         row += `
@@ -356,10 +378,10 @@
       }
       
       row += `
-          <td><strong>${n.Nilai_Akhir || '-'}</strong></td>
-          <td><span class="tag tag-${(n.Predikat || '').toLowerCase()}">${n.Predikat || '-'}</span></td>
-          <td><span class="row-arrow"><i class="fas fa-chevron-right"></i></span></td>
-        </tr>
+        <td><strong>${n.Nilai_Akhir || '-'}</strong></td>
+        <td><span class="tag tag-${(n.Mark || '').toLowerCase()}">${n.Mark || '-'}</span></td>
+        <td><span class="row-arrow"><i class="fas fa-chevron-right"></i></span></td>
+      </tr>
       `;
       return row;
     }).join('');
@@ -367,13 +389,12 @@
     // Event listener untuk row click
     document.querySelectorAll('#nilaiTbody .clickable-row').forEach(row => {
       row.addEventListener('click', function(e) {
-        // Jangan trigger jika klik di dalam link atau button
         if (e.target.closest('a') || e.target.closest('button')) return;
         const data = {
           id: this.dataset.id,
           nama: this.dataset.nama,
           kelas: this.dataset.kelas,
-          uh: this.dataset.uh,
+          nh: this.dataset.nh,
           pts: this.dataset.pts,
           pas: this.dataset.pas,
           listen: this.dataset.listen,
@@ -381,7 +402,7 @@
           read: this.dataset.read,
           write: this.dataset.write,
           akhir: this.dataset.akhir,
-          pred: this.dataset.pred
+          mark: this.dataset.mark
         };
         openModal('Detail Nilai Siswa', data, 'siswa');
       });
@@ -393,6 +414,7 @@
   // ============================================================
   function renderRekapKelas() {
     const bb = $('bobotTbody');
+    const table = document.getElementById('bobotTable');
     if (!DATA.bobot.length) {
       bb.innerHTML = '<tr><td colspan="9" class="text-center">Belum ada data rekap</td></tr>';
       return;
@@ -400,11 +422,25 @@
 
     const isMobile = window.innerWidth <= 768;
 
+    // HEADER DINAMIS
+    let headerRow = `<tr><th>Kelas</th><th>NH</th><th>PTS</th><th>PAS</th>`;
+    if (!isMobile) {
+      headerRow += `<th>Listen</th><th>Speak</th><th>Read</th><th>Write</th>`;
+    }
+    headerRow += `<th>Keterangan</th><th></th></tr>`;
+    
+    // Update header
+    const thead = table.querySelector('thead');
+    if (thead) {
+      thead.innerHTML = headerRow;
+    }
+
+    // BODY DINAMIS
     bb.innerHTML = DATA.bobot.map((b, i) => {
       let row = `
-        <tr class="clickable-row" data-kelas="${b.Kelas || '-'}" data-uh="${b.UH || '-'}" data-pts="${b.PTS || '-'}" data-pas="${b.PAS || '-'}" data-listen="${b.Listening || '-'}" data-speak="${b.Speaking || '-'}" data-read="${b.Reading || '-'}" data-write="${b.Writing || '-'}" data-keterangan="${b.Keterangan || '-'}">
+        <tr class="clickable-row" data-kelas="${b.Kelas || '-'}" data-nh="${b.NH || '-'}" data-pts="${b.PTS || '-'}" data-pas="${b.PAS || '-'}" data-listen="${b.Listening || '-'}" data-speak="${b.Speaking || '-'}" data-read="${b.Reading || '-'}" data-write="${b.Writing || '-'}" data-keterangan="${b.Keterangan || '-'}">
           <td><strong>${b.Kelas || '-'}</strong></td>
-          <td>${b.UH || '-'}</td>
+          <td>${b.NH || '-'}</td>
           <td>${b.PTS || '-'}</td>
           <td>${b.PAS || '-'}`;
       
@@ -430,7 +466,7 @@
         if (e.target.closest('a') || e.target.closest('button')) return;
         const data = {
           kelas: this.dataset.kelas,
-          uh: this.dataset.uh,
+          nh: this.dataset.nh,
           pts: this.dataset.pts,
           pas: this.dataset.pas,
           listen: this.dataset.listen,
@@ -553,7 +589,7 @@
     }
   }
 
-    // ============================================================
+  // ============================================================
   // 11. MODAL
   // ============================================================
   function openModal(title, data, type) {
@@ -584,8 +620,8 @@
         <div class="modal-detail-section">
           <h4>Nilai</h4>
           <div class="modal-detail-row">
-            <span class="label">UH</span>
-            <span class="value">${data.uh || '-'}</span>
+            <span class="label">NH</span>
+            <span class="value">${data.nh || '-'}</span>
           </div>
           <div class="modal-detail-row">
             <span class="label">PTS</span>
@@ -626,8 +662,8 @@
           <span class="value">${data.akhir || '-'}</span>
         </div>
         <div class="modal-result-row" style="margin-top:4px;">
-          <span class="label">Predikat</span>
-          <span class="value"><span class="tag tag-${(data.pred || '').toLowerCase()}">${data.pred || '-'}</span></span>
+          <span class="label">Mark</span>
+          <span class="value"><span class="tag tag-${(data.mark || '').toLowerCase()}">${data.mark || '-'}</span></span>
         </div>
       `;
     } else if (type === 'rekap') {
@@ -642,8 +678,8 @@
         <div class="modal-detail-section">
           <h4>Nilai</h4>
           <div class="modal-detail-row">
-            <span class="label">UH</span>
-            <span class="value">${data.uh || '-'}</span>
+            <span class="label">NH</span>
+            <span class="value">${data.nh || '-'}</span>
           </div>
           <div class="modal-detail-row">
             <span class="label">PTS</span>
@@ -810,7 +846,6 @@
     const page = $(pageId);
     if (page) page.classList.add('active');
 
-    // Update bottom nav ke nilai
     updateBottomNav('nilai');
 
     if (window.innerWidth < 768) {
